@@ -62,10 +62,8 @@
 \underline{Przykład:} 
 \begin{itemize}
     \item \textbf{Wydajność:} Czas przetwarzania danych poniżej ... sekundy.
-    \item \textbf{Skalowalność:} Obsługa minimum ... użytkowników równocześnie.
-    \item \textbf{Bezpieczeństwo:} HTTPS, hasła szyfrowane (bcrypt).
     \item \textbf{Użyteczność:} Interfejs zgodny z WCAG (AA).
-    \item \textbf{Zgodność:} Responsywny interfejs (desktop, tablet, mobilne).
+    \item \textbf{Zgodność:} Responsywny interfejs na urządzeniach desktop.
 \end{itemize}
 
 \section*{5. Architektura Systemu}
@@ -95,13 +93,9 @@ Typ architektury: \textbf{Klient-Serwer (MVC)}.
 \begin{itemize}
     \item \textbf{Algorytm sortowania zadań:} Sortowanie zadań po terminie, priorytecie lub statusie — wykorzystanie np. sortowania przez porównanie z wykorzystaniem Comparator w Javie.
 
-    \item \textbf{Algorytmy uwierzytelniania:} Tokenizacja i walidacja JWT (algorytm HMAC-SHA256), szyfrowanie haseł z użyciem bcrypt.
-
     \item \textbf{Filtrowanie i wyszukiwanie:} Przeszukiwanie listy zadań według etykiet, tekstu lub użytkownika — implementacja z wykorzystaniem filtrów i indeksowania.
 
-    \item \textbf{Zarządzanie sesją:} Wygasanie tokenów na podstawie czasu (timestamp + TTL), middleware do odświeżania sesji.
-
-    \item \textbf{Algorytmy notyfikacji:} Sprawdzanie zbliżających się terminów i wyzwalanie powiadomień.
+    \item \textbf{Algorytmy notyfikacji:} Informowanie o ewentualnych .
 
     \item \textbf{Algorytmy kolejkowania wiadomości:} W WebSocket można zastosować buforowanie i kolejkowanie aktualizacji do wielu klientów jednocześnie.
 \end{itemize}
