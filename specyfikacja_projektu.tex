@@ -1,318 +1,189 @@
 \documentclass[a4paper,12pt]{article}
+
 \usepackage[utf8]{inputenc}
-\usepackage[polish]{babel}
 \usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
 \usepackage{geometry}
-\usepackage{graphicx}
-\usepackage{enumitem}
-\usepackage{hyperref}
 \usepackage{longtable}
+\usepackage{hyperref}
+
 \geometry{margin=2.5cm}
 
-\title{Specyfikacja Projektu Zaliczenowego (Programowanie w Języku Java)}
-\author{Bartosz Badura, Eryk Witkowski}
-\date{[Data]}
+\title{Specyfikacja Projektu Zaliczeniowego \\ \large System wykrywania anomalii w ruchu sieciowym (NIDS)}
+\author{Bartosz Badura, Eryk Witkowki}
+\date{\today}
 
 \begin{document}
-
-\maketitle
-
-\section*{1. Tytuł Projektu}
-
-\vspace{0.5 cm}
- \noindent
-\textbf{Analizator ruchu sieciowego}
-
-\section*{2. Opis i Cele Projektu}
-\textit{Określ, jaki problem rozwiązuje projekt, do czego służy oraz jakie są jego główne cele funkcjonalne.}
-
-\vspace{0.5 cm}
- \noindent Projekt ma na celu stworzenie aplikacji, która umożliwi monitorowanie ruchu sieciowego oraz wykrywanie podejrzanych aktywności. Główne cele projektu:
-
-\begin{itemize}
-    \item Wyświetlanie ruchu w sieci w czasie rzeczywistym.
-    \item Możliwość podglądu pojedynczych pakietów.
-    \item Wykrywanie oraz ogłaszanie podejrzanych zachowań.
-    \item Generowanie raportów o anomaliach.
-    \item Pamiętanie zaobserwowanych nieprawidłowości.
-\end{itemize}
-
-\section*{3. Wymagania Funkcjonalne}
-\textit{Lista konkretnych funkcji, które aplikacja powinna oferować użytkownikowi końcowemu.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-
-\begin{itemize}
-    \item Przegląd ruchu.
-    \item Podgląd pojedynczych pakietów.
-    \item Zapisywanie wybranych pakietów.
-    \item Wykrywanie spamu.
-    \item Wykrywanie ataku DDOS.
-    \item Wykrywanie niepoprawnych przesyłów.
-    \item Generowanie raportów.
-\end{itemize}
-
-\section*{4. Wymagania Niefunkcjonalne}
-\textit{Wymagania techniczne, jakościowe i pozafunkcjonalne, które aplikacja powinna spełniać.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\begin{itemize}
-    \item \textbf{Wydajność:} Czas przetwarzania danych poniżej ... sekundy.
-    \item \textbf{Użyteczność:} Interfejs zgodny z WCAG (AA).
-    \item \textbf{Zgodność:} Responsywny interfejs na urządzeniach desktop.
-\end{itemize}
-
-\section*{5. Architektura Systemu}
-\textit{Opis architektury systemu, jego głównych komponentów oraz zależności między nimi.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-Typ architektury: \textbf{Klient-Serwer (MVC)}.
-
-\subsection*{Schemat:}
-\begin{itemize}
-    \item Frontend: React.js + TailwindCSS
-    \item Backend: Java (framework zależny od implementacji)
-    \item Baza danych: PostgreSQL lub MongoDB
-    \item WebSocket: np. STOMP/WebSocket
-    \item Autoryzacja: JWT / OAuth2
-\end{itemize}
-
-
-\section*{6. Zastosowane Algorytmy}
-\textit{Opis algorytmów i struktur danych wykorzystanych w aplikacji do realizacji funkcjonalności.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\begin{itemize}
-    \item \textbf{Algorytm sortowania zadań:} Sortowanie zadań po terminie, priorytecie lub statusie — wykorzystanie np. sortowania przez porównanie z wykorzystaniem Comparator w Javie.
-
-    \item \textbf{Filtrowanie i wyszukiwanie:} Przeszukiwanie listy zadań według etykiet, tekstu lub użytkownika — implementacja z wykorzystaniem filtrów i indeksowania.
-
-    \item \textbf{Algorytmy notyfikacji:} Informowanie o ewentualnych .
-
-    \item \textbf{Algorytmy kolejkowania wiadomości:} W WebSocket można zastosować buforowanie i kolejkowanie aktualizacji do wielu klientów jednocześnie.
-\end{itemize}
-
-\section*{7. Struktura Klas}
-\textit{Opisuje strukturę klas, ich odpowiedzialności oraz podział logiczny na warstwy w aplikacji.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\vspace{0.5 cm}
- \noindent
-\subsection*{Model}
-\begin{itemize}
-    \item \texttt{User} – identyfikator, imię, email, hasło, rola.
-    \item \texttt{Task} – id, tytuł, opis, termin, status, przypisany użytkownik.
-    \item \texttt{Tag} – id, nazwa, kolor, powiązanie z zadaniami.
-\end{itemize}
-
-\subsection*{Serwisy}
-\begin{itemize}
-    \item \texttt{UserService} – rejestracja, logowanie, zarządzanie rolami.
-    \item \texttt{TaskService} – logika zarządzania zadaniami.
-    \item \texttt{NotificationService} – generowanie powiadomień.
-    \item \texttt{AuthService} – JWT, walidacja, bezpieczeństwo.
-\end{itemize}
-
-\subsection*{Kontrolery}
-\begin{itemize}
-    \item \texttt{UserController} – REST API użytkownika.
-    \item \texttt{TaskController} – REST API zadań.
-    \item \texttt{AuthController} – logowanie i uwierzytelnianie.
-\end{itemize}
-
-\subsection*{Dodatkowe komponenty}
-\begin{itemize}
-    \item \texttt{WebSocketHandler} – aktualizacje w czasie rzeczywistym.
-    \item \texttt{DTO} – obiekty wymiany danych (Data Transfer Object).
-    \item \texttt{Repository} – interfejsy do bazy danych (np. JPA/Hibernate).
-\end{itemize}
-
-\section*{8. Wykorzystane Technologie i Biblioteki}
-\textit{Opis technologii oraz narzędzi użytych w projekcie.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\vspace{0.5 cm}
- \noindent
-\subsection*{Frontend:}
-React, React Query
-
-\subsection*{Backend:}
-Java, WebSocket
-
-\subsection*{Baza Danych:}
-PostgreSQL lub MongoDB
-
-\subsection*{DevOps:}
-Docker, GitHub Actions
-
-\section*{9. API i Modele Danych}
-\textit{Przykładowe punkty końcowe API oraz struktura danych wymienianych między systemami.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\subsection*{Przykładowe Endpointy:}
-\begin{verbatim}
-GET /api/tasks
-POST /api/tasks
-PUT /api/tasks/:id
-DELETE /api/tasks/:id
-\end{verbatim}
-
-\subsection*{Model Danych:}
-\begin{verbatim}
-{
-  "id": "uuid",
-  "tytul": "string",
-  "opis": "string",
-  "termin": "timestamp",
-  "priorytet": "enum(niski, sredni, wysoki)",
-  "etykiety": ["string"],
-  "zrealizowane": "boolean",
-  "przypisanyDo": "user_id"
-}
-\end{verbatim}
-
-\section*{10. Interfejs Użytkownika}
-\textit{Opis interfejsu graficznego aplikacji, jego struktury, logiki działania oraz dostępnych ekranów.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\subsection*{Główne widoki:}
-\begin{itemize}
-    \item \textbf{Ekran logowania i rejestracji:} Formularze z walidacją danych, możliwość odzyskania hasła.
-    \item \textbf{Pulpit użytkownika:} Przegląd aktualnych zadań, kalendarz, szybki dostęp do przypisanych zadań.
-    \item \textbf{Zarządzanie zadaniami:} Widok listy zadań z możliwością sortowania, filtrowania, edytowania i usuwania.
-    \item \textbf{Tworzenie i edycja zadań:} Formularz z polami na tytuł, opis, etykiety, termin, przypisanie użytkownika.
-    \item \textbf{Powiadomienia:} Wyskakujące alerty o nadchodzących terminach i zmianach w zadaniach (real-time).
-    \item \textbf{Panel administracyjny:} Zarządzanie użytkownikami, rolami, dostępem.
-\end{itemize}
-
-\subsection*{Elementy UX/UI:}
-\begin{itemize}
-    \item Responsywność — dostosowanie do urządzeń mobilnych.
-    \item Konsekwentna kolorystyka, nawigacja boczna lub górna.
-    \item Łatwość obsługi — maksymalnie 3 kliknięcia do najważniejszych funkcji.
-    \item Tryb ciemny/jasny — dostępny z poziomu ustawień.
-\end{itemize}
-
-\subsection*{Technologie UI:}
-React, TailwindCSS, React Router, Headless UI, ikony Lucide.
-
-\section*{11. Etapy Realizacji / Harmonogram}
-\textit{Plan wdrożenia projektu z podziałem na fazy i szacowanym czasem realizacji.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\begin{longtable}{|c|p{8cm}|c|}
-\hline
-\textbf{Faza} & \textbf{Opis} & \textbf{Czas} \\
-\hline
-Planowanie & Określenie wymagań, wybór technologii & 1 tydzień \\
-\hline
-Backend & Budowa API, modele danych & 2 tygodnie \\
-\hline
-Frontend & Interfejs, integracja z API & 2 tygodnie \\
-\hline
-Testy i realtime & WebSocket, testy jednostkowe i integracyjne & 1 tydzień \\
-\hline
-Wdrożenie & Konfiguracja Docker, CI/CD, serwer & 1 tydzień \\
-\hline
-\end{longtable}
-
-\section*{12. Testowanie}
-\textit{Sposoby testowania aplikacji, typy testów oraz używane narzędzia.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\begin{itemize}
-    \item Testy jednostkowe (logika backendu i frontend).
-    \item Testy integracyjne (API).
-    \item Testy E2E – np. Cypress, Selenium.
-    \item Testy obciążeniowe – np. JMeter, k6.
-\end{itemize}
-
-\section*{13. Ryzyka i Środki Zaradcze}
-\textit{Identyfikacja potencjalnych zagrożeń projektowych i strategii ich ograniczenia.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\begin{longtable}{|p{5cm}|p{3cm}|p{6cm}|}
-\hline
-\textbf{Ryzyko} & \textbf{Wpływ} & \textbf{Zarządzanie} \\
-\hline
-Nadmierna liczba funkcji & Wysoki & Zablokowanie wymagań po planowaniu \\
-\hline
-Błędy bezpieczeństwa & Wysoki & Audyty kodu, sprawdzone biblioteki \\
-\hline
-Opóźnienia & Średni & Praca iteracyjna (Agile) \\
-\hline
-\end{longtable}
-
-\section*{14. Kryteria Sukcesu}
-\textit{Opisz po czym poznać, że projekt zakończył się sukcesem.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\vspace{0.5 cm}
- \noindent
-\begin{itemize}
-    \item Wszystkie funkcje działają zgodnie ze specyfikacją.
-    \item Pokrycie testami > 80\%.
-    \item Brak błędów krytycznych na produkcji.
-    \item Pozytywna opinia użytkowników (średnia ocena \textgreater 4.5).
-\end{itemize}
-
-\section*{15. Szacunkowe Nakłady Pracy (Workload Estimation)}
-\textit{Osobne oszacowanie czasu pracy dla poszczególnych modułów i funkcji.}
-
-\vspace{0.5 cm}
- \noindent
-\underline{Przykład:} 
-\vspace{0.5 cm}
- \noindent
-Całkowity szacowany czas pracy: \textbf{160 godzin roboczych}.
-
-\begin{longtable}{|p{6cm}|p{4cm}|p{3cm}|}
-\hline
-\textbf{Moduł / Zadanie} & \textbf{Opis} & \textbf{Szac. czas (h)} \\
-\hline
-Analiza i projektowanie & Wymagania, mockupy, wybór technologii & 12 \\
-\hline
-Backend API (CRUD, JWT) & Modele danych, logika biznesowa & 35 \\
-\hline
-Frontend UI (React) & Komponenty, interakcje z API & 30 \\
-\hline
-Uwierzytelnianie i sesje & Login, rejestracja, autoryzacja & 15 \\
-\hline
-WebSocket – realtime & Notyfikacje i live updates & 10 \\
-\hline
-Testy (unit + E2E) & Pokrycie testami kluczowych ścieżek & 15 \\
-\hline
-Docker / CI / Deployment & Konfiguracja środowiska, produkcja & 10 \\
-\hline
-Dokumentacja techniczna & README, API schema, komentarze & 8 \\
-\hline
-Bufor czasowy / błędy & Debugowanie, nieprzewidziane problemy & 25 \\
-\hline
-\end{longtable}
-
+	
+	\maketitle
+	
+	\section{Tytuł Projektu}
+	System wykrywania anomalii w ruchu sieciowym (NIDS) w Javie
+	
+	\section{Opis i Cele Projektu}
+	Projekt ma na celu stworzenie aplikacji monitorującej ruch sieciowy w czasie rzeczywistym, która analizuje pakiety i wykrywa potencjalne zagrożenia bezpieczeństwa.
+	
+	Aplikacja umożliwia:
+	\begin{itemize}
+		\item przechwytywanie i analizę pakietów sieciowych,
+		\item wykrywanie podejrzanych aktywności,
+		\item generowanie alertów i raportów bezpieczeństwa.
+	\end{itemize}
+	
+	Główne cele projektu:
+	\begin{itemize}
+		\item identyfikacja anomalii,
+		\item analiza statystyczna ruchu,
+		\item wizualizacja zdarzeń,
+		\item powiadamianie o zagrożeniach.
+	\end{itemize}
+	
+	\section{Wymagania Funkcjonalne}
+	\begin{itemize}
+		\item Przechwytywanie pakietów (TCP, UDP, ICMP)
+		\item Analiza nagłówków pakietów
+		\item Wykrywanie nadmiernej liczby połączeń
+		\item Wykrywanie skanowania portów
+		\item System alertów
+		\item Generowanie raportów
+		\item Filtrowanie zdarzeń
+		\item Konfiguracja progów detekcji
+	\end{itemize}
+	
+	\section{Wymagania Niefunkcjonalne}
+	\begin{itemize}
+		\item Wydajność: min. 100 pakietów/sek
+		\item Skalowalność: obsługa wielu interfejsów
+		\item Niezawodność: odporność na błędy
+		\item Użyteczność: prosty interfejs
+	\end{itemize}
+	
+	\section{Architektura Systemu}
+	Typ architektury: warstwowa
+	
+	Komponenty:
+	\begin{itemize}
+		\item Capture Layer – przechwytywanie pakietów
+		\item Analysis Layer – analiza danych
+		\item Detection Engine – logika detekcji
+		\item Alert System – powiadomienia
+		\item Storage – zapis danych
+	\end{itemize}
+	
+	\section{Zastosowane Algorytmy}
+	\begin{itemize}
+		\item Detekcja progowa (threshold-based)
+		\item Analiza anomalii
+		\item Parsowanie pakietów TCP/IP
+		\item Filtrowanie strumieniowe
+	\end{itemize}
+	
+	\section{Struktura Klas}
+	\subsection*{Model}
+	\begin{itemize}
+		\item Packet - dane pakietu (IP, porty, protokół)
+		\item Alert - wykryte zdarzenie
+		\item TrafficStats - statystyki ruchu
+	\end{itemize}
+	
+	\subsection*{Serwisy}
+	\begin{itemize}
+		\item PacketCaptureService - przechwytywanie ruchu
+		\item PacketAnalysisService - analiza pakietów
+		\item DetectionService - logika wykrywania
+		\item AlertService - generowanie alertów
+	\end{itemize}
+	
+	\subsection*{Kontrolery}
+	\begin{itemize}
+		\item AlertController
+		\item StatsController
+	\end{itemize}
+	
+	\section{Technologie i Biblioteki}
+	\begin{itemize}
+		\item Java
+		\item Pcap4J
+		\item JavaFX
+		\item JUnit
+	\end{itemize}
+	
+	\section{API i Modele Danych}
+	Przykładowy model danych:
+	
+	\begin{verbatim}
+		{
+			"sourceIp": "192.168.0.1",
+			"destinationIp": "192.168.0.10",
+			"port": 80,
+			"protocol": "TCP",
+			"timestamp": "2026-01-01T12:00:00",
+			"isSuspicious": true
+		}
+	\end{verbatim}
+	
+	\section{Interfejs Użytkownika}
+	\begin{itemize}
+		\item GUI – dashboard i statystyki
+	\end{itemize}
+	
+	\section{Harmonogram}
+	\begin{longtable}{|l|l|l|}
+		\hline
+		Faza & Opis & Czas \\
+		\hline
+		Planowanie & Analiza projektu & 1 tydzień \\
+		Capture & Przechwytywanie pakietów & 1 tydzień \\
+		Analiza & Parser i analiza & 2 tygodnie \\
+		Detekcja & Algorytmy & 2 tygodnie \\
+		UI & Wizualizacja & 1.5 tygodnia \\
+		Testy & Testowanie & 1 tydzień \\
+		\hline
+	\end{longtable}
+	
+	\section{Testowanie}
+	\begin{itemize}
+		\item Testy jednostkowe
+		\item Testy integracyjne
+		\item Testy obciążeniowe
+	\end{itemize}
+	
+	\section{Ryzyka}
+	\begin{longtable}{|l|l|l|}
+		\hline
+		Ryzyko & Wpływ & Rozwiązanie \\
+		\hline
+		Duży ruch & Wysoki & optymalizacja, buforowanie \\
+		Błędy parsowania & Średni & Walidacja \\
+		Fałszywe alarmy & Wysoki & Strojenie progów \\
+		\hline
+	\end{longtable}
+	
+	\section{Kryteria Sukcesu}
+	\begin{itemize}
+		\item Poprawne przechwytywanie pakietów na interfejsie Ethernet/Wi-Fi
+		\item Poprawna detekcja zagrożeń
+		\item Stabilność systemu
+		\item Brak błędów krytycznych
+		\item Czytelne raporty
+		
+	\end{itemize}
+	
+	\section{Nakłady Pracy}
+	Całkowity czas: 120--160 godzin
+	
+	\begin{longtable}{|l|l|}
+		\hline
+		Moduł & Czas (h) \\
+		\hline
+		Analiza & 5 \\
+		Capture & 15 \\
+		Analiza pakietów & 30 \\
+		Detekcja & 30 \\
+		UI & 25 \\
+		Testy & 15 \\
+		Debugowanie & 20 \\
+		\hline
+	\end{longtable}
+	
 \end{document}
-
