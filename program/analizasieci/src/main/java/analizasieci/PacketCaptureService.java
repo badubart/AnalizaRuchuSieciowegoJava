@@ -28,6 +28,9 @@ public class PacketCaptureService {
         while (i<100)
         {
             packet = handle.getNextPacket();
+            if (packet == null) {
+                continue;
+            }
             if(packet.contains(IpV4Packet.class))
             {
                 System.out.println("Pakiet "+i+" ----------------------------");
