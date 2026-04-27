@@ -27,7 +27,7 @@ public class PacketCaptureService {
         List<Packet> pakiety = new ArrayList<>();
         int i=0;
 
-        while (i<100)
+        while (i<1000)
         {
             packet = handle.getNextPacket();
             pakiety.add(packet);
