@@ -1,5 +1,6 @@
 package analizasieci;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.pcap4j.core.*;
@@ -11,6 +12,7 @@ import org.pcap4j.packet.TcpPacket;
 public class PacketCaptureService {
     public static void main(String[] args) throws Exception {
         List<PcapNetworkInterface> devices = Pcaps.findAllDevs();
+        
         // Pobranie listy interfejsów
         for (int i = 0; i < devices.size(); i++) 
         {
@@ -22,12 +24,13 @@ public class PacketCaptureService {
         PcapHandle handle = devRealtek.openLive(65536, PromiscuousMode.PROMISCUOUS, 10);
         
         Packet packet;
-        
+        List<Packet> pakiety = new ArrayList<>();
         int i=0;
 
         while (i<100)
         {
             packet = handle.getNextPacket();
+            pakiety.add(packet);
             if (packet == null) {
                 continue;
             }
