@@ -1,51 +1,68 @@
 package analizasieci.packetCapture;
 
 
+import analizasieci.packetCapture.packetLayers.ProtocolLayer;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyPacket
 {
-    String protocol;
-    int port;
-    String sourceIp;
-    String destinationIp;
-    String timeStamp;
+    private String timeStamp;
+    private int packetLength;
+    private String sourceIp = "";
+    private String destinationIp = "";
+    private int sourcePort = -1;
+    private int destinationPort = -1;
+    private String highestProtocolName = "";
+    private final List<ProtocolLayer> layers = new ArrayList<>();
 
-    boolean isSuspicoius;
-
-    public String getProtocol()
-    {
-        return protocol;
-    }
-    public String getSourceIP()
-    {
-        return sourceIp;
-    }
-    public String getDestinationIP()
-    {
-        return destinationIp;
-    }
-    public String getTime()
-    {
+    public String getTimeStamp(){
         return timeStamp;
     }
-    public int getPort()
-    {
-        return port;
+    public int getPacketLength(){
+        return packetLength;
     }
-    public MyPacket(String newProtocol, int newPort, String newSourceIP, String newDestinationIP, String newTimeStamp)
-    {
-        protocol = newProtocol;
-        port = newPort;
-        sourceIp = newSourceIP;
-        destinationIp = newDestinationIP;
-        timeStamp = newTimeStamp;
+    public String getSourceIp(){
+        return sourceIp;
     }
-
-    public void wypisz()
-    {
-        System.out.println("Protokół: "+ protocol);
-        System.out.println("Port: "+port);
-        System.out.println("Adres nadawcy: "+sourceIp);
-        System.out.println("Adres docelowy: "+destinationIp);
-        System.out.println("Czas: "+timeStamp);
+    public String getDestinationIp(){
+        return destinationIp;
+    }
+    public int getSourcePort(){
+        return sourcePort;
+    }
+    public int getDestinationPort(){
+        return destinationPort;
+    }
+    public String getHighestProtocolName() {
+        return highestProtocolName;
+    }
+    public void setTimeStamp(String timeStamp){
+        this.timeStamp = timeStamp;
+    }
+    public void setPacketLength(int packetLength){
+        this.packetLength = packetLength;
+    }
+    public void setSourceIp(String sourceIp){
+        this.sourceIp = sourceIp;
+    }
+    public void setDestinationIp(String destinationIp){
+        this.destinationIp=destinationIp;
+    }
+    public void setSourcePort(int sourcePort){
+        this.sourcePort = sourcePort;
+    }
+    public void setDestinationPort(int destinationPort){
+        this.destinationPort = destinationPort;
+    }
+    public void setHighestProtocolName(String highestProtocolName){
+        this.highestProtocolName = highestProtocolName;
+    }
+    public void addLayer(ProtocolLayer layer){
+        layers.add(layer);
+    }
+    public List<ProtocolLayer> getLayers(){
+        return layers;
     }
 }
