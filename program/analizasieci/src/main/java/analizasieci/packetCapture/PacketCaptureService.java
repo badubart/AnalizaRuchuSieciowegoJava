@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+
+import analizasieci.packetAnalysis.ChecksumValidation;
+
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.IpV4Packet;
@@ -41,6 +44,8 @@ public class PacketCaptureService {
                 pakiety.add(packet);
 
                 String src = "Brak";
+                byte[] isrc;
+                byte[] idst;
                 String dst = "Brak";
                 String proto = "Inny";
                 String info = "";
@@ -48,7 +53,9 @@ public class PacketCaptureService {
                 if (packet.contains(IpV4Packet.class)) {
                     IpV4Packet ip = packet.get(IpV4Packet.class);
                     src = ip.getHeader().getSrcAddr().getHostAddress();
+
                     dst = ip.getHeader().getDstAddr().getHostAddress();
+
                     proto = ip.getHeader().getProtocol().name();
                 }
                 else if (packet.contains(IpV6Packet.class)) {
@@ -67,7 +74,17 @@ public class PacketCaptureService {
 
                 if (packet.contains(TcpPacket.class)) {
                     TcpPacket tcp = packet.get(TcpPacket.class);
-                    info = "Port: " + tcp.getHeader().getSrcPort().valueAsInt() + " -> " + tcp.getHeader().getDstPort().valueAsInt();
+
+                    isrc=packet.get(IpV4Packet.class).getHeader().getSrcAddr().getAddress().clone();
+                    idst=packet.get(IpV4Packet.class).getHeader().getDstAddr().getAddress().clone();
+                    ChecksumValidation val = new ChecksumValidation();
+
+                    String wynik = val.validateChecksum(isrc, idst, tcp);
+
+                    info = "Port: " + tcp.getHeader().getSrcPort().valueAsInt() + " -> " + tcp.getHeader().getDstPort().valueAsInt()+" Checksum: "+ wynik;
+
+
+
                 } else if (packet.contains(UdpPacket.class)) {
                     UdpPacket udp = packet.get(UdpPacket.class);
                     info = "Port: " + udp.getHeader().getSrcPort().valueAsInt() + " -> " + udp.getHeader().getDstPort().valueAsInt();
