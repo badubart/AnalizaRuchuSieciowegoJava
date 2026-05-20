@@ -1,21 +1,13 @@
 package analizasieci.packetCapture;
 
-import org.pcap4j.packet.*;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 
 public class MyPacket
 {
-    private final int length;
-    private final String timeStamp;
-
-    String source;
-    String destination;
     String protocol;
-    private final List<ProtocolLayer> layers = new ArrayList<>();
+    int port;
+    String sourceIp;
+    String destinationIp;
+    String timeStamp;
 
     boolean isSuspicoius;
 
