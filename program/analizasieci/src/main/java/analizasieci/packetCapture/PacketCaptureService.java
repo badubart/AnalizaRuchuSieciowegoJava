@@ -34,6 +34,7 @@ public class PacketCaptureService {
     public void listeningLoop(Consumer<PacketLookupRow> uiUpdater){
         int i=0;
         Packet packet;
+        ChecksumValidation val = new ChecksumValidation();
         try {
             isListening = true;
             while (isListening) {
@@ -75,11 +76,8 @@ public class PacketCaptureService {
                 if (packet.contains(TcpPacket.class)) {
                     TcpPacket tcp = packet.get(TcpPacket.class);
 
-                    isrc=packet.get(IpV4Packet.class).getHeader().getSrcAddr().getAddress().clone();
-                    idst=packet.get(IpV4Packet.class).getHeader().getDstAddr().getAddress().clone();
-                    ChecksumValidation val = new ChecksumValidation();
 
-                    String wynik = val.validateChecksum(isrc, idst, tcp);
+                    String wynik = val.validateTCP(packet);
 
                     info = "Port: " + tcp.getHeader().getSrcPort().valueAsInt() + " -> " + tcp.getHeader().getDstPort().valueAsInt()+" Checksum: "+ wynik;
 

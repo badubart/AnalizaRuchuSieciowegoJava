@@ -37,10 +37,16 @@ public class PacketLookupWindowController {
     @FXML
     public void initialize() {
         colNr.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNr.prefWidthProperty().bind(packetList.widthProperty().multiply(0.04));
         colSource.setCellValueFactory(new PropertyValueFactory<>("source"));
+        colSource.prefWidthProperty().bind(packetList.widthProperty().multiply(0.1));
         colDestination.setCellValueFactory(new PropertyValueFactory<>("destination"));
+        colDestination.prefWidthProperty().bind(packetList.widthProperty().multiply(0.1));
         colProtocol.setCellValueFactory(new PropertyValueFactory<>("protocol"));
+        colProtocol.prefWidthProperty().bind(packetList.widthProperty().multiply(0.08));
         colLength.setCellValueFactory(new PropertyValueFactory<>("length"));
+        colLength.prefWidthProperty().bind(packetList.widthProperty().multiply(0.08));
+
         colInfo.setCellValueFactory(new PropertyValueFactory<>("info"));
 
         packetList.setItems(packetData);
