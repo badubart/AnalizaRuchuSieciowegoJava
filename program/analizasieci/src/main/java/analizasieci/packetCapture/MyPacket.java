@@ -8,6 +8,7 @@ import java.util.List;
 
 public class MyPacket
 {
+    private byte[] rawData;
     private String timeStamp;
     private int packetLength;
     private String sourceIp = "";
@@ -64,5 +65,55 @@ public class MyPacket
     }
     public List<ProtocolLayer> getLayers(){
         return layers;
+    }
+
+
+
+    public byte[] getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(byte[] rawData) {
+        this.rawData = rawData;
+    }
+    public String getHexDump() {
+        if (rawData == null || rawData.length == 0) {
+            return "Brak danych pakietu.";
+        }
+
+        StringBuilder dump = new StringBuilder();
+
+        for (int i = 0; i < rawData.length; i += 16) {
+            dump.append(String.format("%04X  ", i));
+
+            StringBuilder hexPart = new StringBuilder();
+            StringBuilder asciiPart = new StringBuilder();
+            for (int j = 0; j < 16; j++) {
+                if (i + j < rawData.length) {
+                    byte b = rawData[i + j];
+
+                    hexPart.append(String.format("%02X ", b));
+
+                    if (j == 7) {
+                        hexPart.append(" ");
+                    }
+
+                    char c = (char) b;
+                    if (c >= 32 && c <= 126) {
+                        asciiPart.append(c);
+                    } else {
+                        asciiPart.append('.');
+                    }
+                } else {
+                    hexPart.append("   ");
+                    if (j == 7) {
+                        hexPart.append(" ");
+                    }
+                }
+            }
+            dump.append(hexPart.toString()).append("  ").append(asciiPart.toString()).append("\n");
+        }
+
+        return dump.toString();
     }
 }

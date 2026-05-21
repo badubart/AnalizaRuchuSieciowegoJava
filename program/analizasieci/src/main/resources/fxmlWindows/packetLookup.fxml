@@ -69,7 +69,7 @@
               </columns>
             </TableView>
             <TreeView fx:id="protocolTree" layoutX="557.0" layoutY="98.0" prefHeight="355.0" prefWidth="361.0" />
-            <TextArea layoutX="557.0" layoutY="472.0" prefHeight="149.0" prefWidth="361.0" />
+            <TextArea fx:id = "hexDump" layoutX="557.0" layoutY="472.0" prefHeight="149.0" prefWidth="361.0" />
       </children>
     </AnchorPane>
   </children>

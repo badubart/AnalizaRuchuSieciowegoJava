@@ -1,6 +1,7 @@
 package analizasieci.windowsControls;
 
 import analizasieci.Solution;
+import analizasieci.packetCapture.MyPacket;
 import analizasieci.packetCapture.PacketLookupRow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class PacketLookupWindowController {
@@ -23,7 +25,7 @@ public class PacketLookupWindowController {
     @FXML private TableColumn<PacketLookupRow, String> colInfo;
 
     @FXML private TreeView<String> protocolTree;
-
+    @FXML private TextArea hexDump;
     @FXML private Button button1;
     @FXML private MenuItem fileQuit;
 
@@ -56,8 +58,11 @@ public class PacketLookupWindowController {
         if (fileQuit != null) {
             fileQuit.setOnAction(event -> System.exit(0));
         }
-
-        TreeItem<String> rootItem = new TreeItem<>("Root");
+        protocolTree.setShowRoot(false);
+        if(hexDump != null) {
+            hexDump.setFont(Font.font("Consolas",12));
+            hexDump.setEditable(false);
+        }
     }
 
     private void startCaptureThread() {
@@ -77,7 +82,36 @@ public class PacketLookupWindowController {
     }
 
     private void updateDetailsArea(PacketLookupRow row) {
+        MyPacket packet = row.getMyPacket();
+        if (packet == null) return;
 
+        // 1. AKTUALIZACJA DRZEWA WARSTW (TreeView)
+        TreeItem<String> rootItem = new TreeItem<>("Packet");
+
+        // Przechodzimy przez wszystkie warstwy (np. Ethernet, IPv4, TCP)
+        for (ProtocolLayer layer : packet.getLayers()) {
+
+            // Tworzymy główną gałąź dla protokołu (np. "Internet Protocol Version 4 (IPv4)")
+            TreeItem<String> layerNode = new TreeItem<>(layer.getProtocolName());
+            layerNode.setExpanded(true); // Domyślnie rozwijamy gałęzie
+
+            // Dodajemy szczegóły nagłówka jako liście
+            for (Map.Entry<String, String> entry : layer.getFields().entrySet()) {
+                // Sklejamy klucz z wartością (np. "Source IP: 192.168.1.1")
+                TreeItem<String> fieldNode = new TreeItem<>(entry.getKey() + ": " + entry.getValue());
+                layerNode.getChildren().add(fieldNode);
+            }
+
+            rootItem.getChildren().add(layerNode);
+        }
+
+        // Aktualizujemy drzewo w GUI
+        protocolTree.setRoot(rootItem);
+
+        // 2. AKTUALIZACJA ZRZUTU SZESNASTKOWEGO (Hex Dump)
+        if (hexDumpArea != null) {
+            hexDumpArea.setText(packet.getHexDump());
+        }
     }
 
     private void handleBackAction() {
