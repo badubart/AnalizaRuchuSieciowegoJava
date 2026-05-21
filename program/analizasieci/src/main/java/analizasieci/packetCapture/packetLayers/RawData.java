@@ -13,7 +13,7 @@ public class RawData implements ProtocolLayer {
 
     @Override
     public String getProtocolName() {
-        return "Data (Unresolved Payload)";
+        return "Data";
     }
 
     @Override

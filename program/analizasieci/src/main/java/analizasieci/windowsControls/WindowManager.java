@@ -23,8 +23,10 @@ public class WindowManager {
 
             Stage stage = new Stage();
             stage.setTitle("Wybór interfejsu");
-            stage.setMinHeight(400);
-            stage.setMinWidth(500);
+            stage.setMinHeight(500);
+            stage.setMaxHeight(800);
+            stage.setMinWidth(640);
+            stage.setMaxWidth(640);
 
             stage.setScene(new Scene(root));
             stage.show();
@@ -46,8 +48,10 @@ public class WindowManager {
             Stage stage = new Stage();
             stage.setTitle("Podgląd pakietów");
             stage.setScene(new Scene(root));
-            stage.setMinHeight(400);
-            stage.setMinWidth(500);
+            stage.setMinHeight(600);
+            stage.setMaxHeight(800);
+            stage.setMinWidth(1120);
+            stage.setMaxWidth(1120);
             stage.show();
 
         } catch (IOException e) {

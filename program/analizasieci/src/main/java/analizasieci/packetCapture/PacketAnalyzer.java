@@ -1,15 +1,19 @@
-package analizasieci.packetCapture.packetLayers;
+package analizasieci.packetCapture;
 
-import analizasieci.packetCapture.MyPacket;
+import analizasieci.packetCapture.packetLayers.*;
 import org.pcap4j.packet.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class PacketAnalyzer {
     private final L7PacketAnalyzer l7Analyzer = new L7PacketAnalyzer();
 
-    public MyPacket analyze(Packet packet, String captureTime) {
+    public static MyPacket analyze(Packet packet) {
         MyPacket myPacket = new MyPacket();
 
-        myPacket.setTimeStamp(captureTime);
+        LocalTime timeStamp = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        myPacket.setTimeStamp(timeStamp.format(formatter));
         myPacket.setPacketLength(packet.getRawData().length);
         myPacket.setRawData(packet.getRawData());
 
@@ -62,7 +66,7 @@ public class PacketAnalyzer {
                 myPacket.addLayer(new L4TCP(tcp));
 
                 if (tcp.getPayload() != null) {
-                    l7Analyzer.analyze(tcp.getPayload().getRawData(), tcp, myPacket);
+                    L7PacketAnalyzer.analyze(tcp.getPayload().getRawData(), tcp, myPacket);
                 }
             }
             else if (currentPacket instanceof UdpPacket) {
@@ -79,7 +83,7 @@ public class PacketAnalyzer {
                 }
 
                 else if (udp.getPayload() != null) {
-                    l7Analyzer.analyze(udp.getPayload().getRawData(), udp, myPacket);
+                    L7PacketAnalyzer.analyze(udp.getPayload().getRawData(), udp, myPacket);
                 }
             }
 

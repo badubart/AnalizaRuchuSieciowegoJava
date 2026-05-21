@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 public class L7PacketAnalyzer {
 
-    public void analyze(byte[] payloadBytes, Packet l4Packet, MyPacket myPacket) {
+    public static void analyze(byte[] payloadBytes, Packet l4Packet, MyPacket myPacket) {
         if (payloadBytes == null || payloadBytes.length == 0) {
             return;
         }

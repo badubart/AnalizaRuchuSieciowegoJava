@@ -1,7 +1,7 @@
 package analizasieci.packetCapture;
 
 public class PacketLookupRow {
-
+    private MyPacket packet;
     private int id;
     private String source;
     private String destination;
@@ -9,19 +9,23 @@ public class PacketLookupRow {
     private int length;
     private String info;
 
-    public PacketLookupRow(int id, String source, String destination, String protocol, int length, String info) {
+    public PacketLookupRow(int id, String source, String destination, String protocol, int length, String info, MyPacket packet) {
         this.id = id;
         this.source = source;
         this.destination = destination;
         this.protocol = protocol;
         this.length = length;
         this.info = info;
+        this.packet = packet;
     }
 
     public int getId() {
         return id;
     }
 
+    public MyPacket getPacket(){
+        return packet;
+    }
     public String getSource() {
         return source;
     }

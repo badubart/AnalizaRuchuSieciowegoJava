@@ -11,6 +11,8 @@ public class MyPacket
     private byte[] rawData;
     private String timeStamp;
     private int packetLength;
+    private String sourceMAC = "";
+    private String destinationMAC = "";
     private String sourceIp = "";
     private String destinationIp = "";
     private int sourcePort = -1;
@@ -23,6 +25,12 @@ public class MyPacket
     }
     public int getPacketLength(){
         return packetLength;
+    }
+    public String getSourceMAC(){
+        return sourceMAC;
+    }
+    public String getDestinationMAC(){
+        return destinationMAC;
     }
     public String getSourceIp(){
         return sourceIp;
@@ -44,6 +52,12 @@ public class MyPacket
     }
     public void setPacketLength(int packetLength){
         this.packetLength = packetLength;
+    }
+    public void setSourceMAC(String sourceMAC){
+        this.sourceMAC = sourceMAC;
+    }
+    public void setDestinationMAC(String destinationMAC){
+        this.destinationMAC = destinationMAC;
     }
     public void setSourceIp(String sourceIp){
         this.sourceIp = sourceIp;

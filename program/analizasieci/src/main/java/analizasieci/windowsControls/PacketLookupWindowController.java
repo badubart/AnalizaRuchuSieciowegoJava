@@ -3,6 +3,7 @@ package analizasieci.windowsControls;
 import analizasieci.Solution;
 import analizasieci.packetCapture.MyPacket;
 import analizasieci.packetCapture.PacketLookupRow;
+import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 public class PacketLookupWindowController {
 
@@ -38,6 +41,7 @@ public class PacketLookupWindowController {
 
     @FXML
     public void initialize() {
+        System.out.println("tesst");
         colNr.setCellValueFactory(new PropertyValueFactory<>("id"));
         colSource.setCellValueFactory(new PropertyValueFactory<>("source"));
         colDestination.setCellValueFactory(new PropertyValueFactory<>("destination"));
@@ -82,8 +86,11 @@ public class PacketLookupWindowController {
     }
 
     private void updateDetailsArea(PacketLookupRow row) {
-        MyPacket packet = row.getMyPacket();
-        if (packet == null) return;
+        MyPacket packet = row.getPacket();
+        if (packet == null){
+            System.out.println("Pakiet NULL");
+            return;
+        }
 
         // 1. AKTUALIZACJA DRZEWA WARSTW (TreeView)
         TreeItem<String> rootItem = new TreeItem<>("Packet");
@@ -109,8 +116,8 @@ public class PacketLookupWindowController {
         protocolTree.setRoot(rootItem);
 
         // 2. AKTUALIZACJA ZRZUTU SZESNASTKOWEGO (Hex Dump)
-        if (hexDumpArea != null) {
-            hexDumpArea.setText(packet.getHexDump());
+        if (hexDump != null) {
+            hexDump.setText(packet.getHexDump());
         }
     }
 
