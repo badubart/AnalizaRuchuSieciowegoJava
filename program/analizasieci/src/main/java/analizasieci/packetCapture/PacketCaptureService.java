@@ -85,7 +85,8 @@ public class PacketCaptureService {
 
                 } else if (packet.contains(UdpPacket.class)) {
                     UdpPacket udp = packet.get(UdpPacket.class);
-                    info = "Port: " + udp.getHeader().getSrcPort().valueAsInt() + " -> " + udp.getHeader().getDstPort().valueAsInt();
+                    String wynik = val.validateUdp(packet);
+                    info = "Port: " + udp.getHeader().getSrcPort().valueAsInt() + " -> " + udp.getHeader().getDstPort().valueAsInt()+" Checksum: "+wynik;
                 }
 
                 PacketLookupRow newPacket = new PacketLookupRow(i, src, dst, proto, packet.length(), info);
