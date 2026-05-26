@@ -1,5 +1,6 @@
 package analizasieci;
 
+import analizasieci.packetCapture.DeviceManager;
 import analizasieci.packetCapture.PacketCaptureService;
 import analizasieci.packetCapture.PacketLookupRow;
 import analizasieci.windowsControls.WindowManager;
@@ -10,19 +11,20 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Solution {
-    PacketCaptureService packetCapture = new PacketCaptureService();
-    public void launch(){
-        packetCapture.init(4);
-
+    DeviceManager deviceManager;
+    PacketCaptureService packetCapture;
+    public Solution(){
+        deviceManager = new DeviceManager();
+        packetCapture = new PacketCaptureService();
     }
     public List<PcapNetworkInterface> getDevices(){
-        return packetCapture.getDevices();
+        return deviceManager.getDevices();
     }
     public void getInterfacesInfo(){
-        packetCapture.getInterfacesInfo();
+        deviceManager.getInterfacesInfo();
     }
     public void selectNetworkInterface(int n){
-        packetCapture.selectNetworkInterface(n);
+        packetCapture.setHandle(deviceManager.selectNetworkInterface(n));
     }
     public void listeningLoop(Consumer<PacketLookupRow> uiUpdater){
         Thread captureThread = new Thread(() -> {

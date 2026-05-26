@@ -12,7 +12,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Solution program = new Solution();
-        program.launch();
 
         WindowManager window = new WindowManager();
         window.showDevSelectWindow(program);

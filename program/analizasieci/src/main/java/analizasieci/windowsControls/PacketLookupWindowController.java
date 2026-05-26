@@ -1,14 +1,19 @@
 package analizasieci.windowsControls;
 
 import analizasieci.Solution;
+import analizasieci.packetCapture.MyPacket;
 import analizasieci.packetCapture.PacketLookupRow;
+import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 public class PacketLookupWindowController {
 
@@ -23,6 +28,9 @@ public class PacketLookupWindowController {
     @FXML private TableColumn<PacketLookupRow, String> colInfo;
 
     @FXML private TreeView<String> protocolTree;
+    @FXML private TextArea hexDump;
+
+    @FXML private TextField filterTextBox;
 
     @FXML private Button button1;
     @FXML private MenuItem fileQuit;
@@ -31,22 +39,17 @@ public class PacketLookupWindowController {
 
     public void setProgram(Solution program) {
         this.program = program;
-        startCaptureThread();
+        program.listeningLoop(this::addPacketToTable);
     }
 
     @FXML
     public void initialize() {
+        System.out.println("tesst");
         colNr.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNr.prefWidthProperty().bind(packetList.widthProperty().multiply(0.04));
         colSource.setCellValueFactory(new PropertyValueFactory<>("source"));
-        colSource.prefWidthProperty().bind(packetList.widthProperty().multiply(0.1));
         colDestination.setCellValueFactory(new PropertyValueFactory<>("destination"));
-        colDestination.prefWidthProperty().bind(packetList.widthProperty().multiply(0.1));
         colProtocol.setCellValueFactory(new PropertyValueFactory<>("protocol"));
-        colProtocol.prefWidthProperty().bind(packetList.widthProperty().multiply(0.08));
         colLength.setCellValueFactory(new PropertyValueFactory<>("length"));
-        colLength.prefWidthProperty().bind(packetList.widthProperty().multiply(0.08));
-
         colInfo.setCellValueFactory(new PropertyValueFactory<>("info"));
 
         packetList.setItems(packetData);
@@ -62,8 +65,11 @@ public class PacketLookupWindowController {
         if (fileQuit != null) {
             fileQuit.setOnAction(event -> System.exit(0));
         }
-
-        TreeItem<String> rootItem = new TreeItem<>("Root");
+        protocolTree.setShowRoot(false);
+        if(hexDump != null) {
+            hexDump.setFont(Font.font("Consolas",12));
+            hexDump.setEditable(false);
+        }
     }
 
     private void startCaptureThread() {
@@ -83,7 +89,39 @@ public class PacketLookupWindowController {
     }
 
     private void updateDetailsArea(PacketLookupRow row) {
+        MyPacket packet = row.getPacket();
+        if (packet == null){
+            System.out.println("Pakiet NULL");
+            return;
+        }
 
+        // 1. AKTUALIZACJA DRZEWA WARSTW (TreeView)
+        TreeItem<String> rootItem = new TreeItem<>("Packet");
+
+        // Przechodzimy przez wszystkie warstwy (np. Ethernet, IPv4, TCP)
+        for (ProtocolLayer layer : packet.getLayers()) {
+
+            // Tworzymy główną gałąź dla protokołu (np. "Internet Protocol Version 4 (IPv4)")
+            TreeItem<String> layerNode = new TreeItem<>(layer.getProtocolName());
+            layerNode.setExpanded(true); // Domyślnie rozwijamy gałęzie
+
+            // Dodajemy szczegóły nagłówka jako liście
+            for (Map.Entry<String, String> entry : layer.getFields().entrySet()) {
+                // Sklejamy klucz z wartością (np. "Source IP: 192.168.1.1")
+                TreeItem<String> fieldNode = new TreeItem<>(entry.getKey() + ": " + entry.getValue());
+                layerNode.getChildren().add(fieldNode);
+            }
+
+            rootItem.getChildren().add(layerNode);
+        }
+
+        // Aktualizujemy drzewo w GUI
+        protocolTree.setRoot(rootItem);
+
+        // 2. AKTUALIZACJA ZRZUTU SZESNASTKOWEGO (Hex Dump)
+        if (hexDump != null) {
+            hexDump.setText(packet.getHexDump());
+        }
     }
 
     private void handleBackAction() {

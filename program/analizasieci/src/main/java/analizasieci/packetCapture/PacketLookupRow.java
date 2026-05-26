@@ -1,45 +1,39 @@
 package analizasieci.packetCapture;
 
 public class PacketLookupRow {
+    private final  MyPacket packet;
+    private final int id;
 
-    private int id;
-    private String source;
-    private String destination;
-    private String protocol;
-    private int length;
-    private String info;
-
-    public PacketLookupRow(int id, String source, String destination, String protocol, int length, String info) {
+    public PacketLookupRow(int id, MyPacket packet) {
         this.id = id;
-        this.source = source;
-        this.destination = destination;
-        this.protocol = protocol;
-        this.length = length;
-        this.info = info;
+        this.packet = packet;
     }
 
     public int getId() {
         return id;
     }
 
+    public MyPacket getPacket(){
+        return packet;
+    }
     public String getSource() {
-        return source;
+        return packet.getSourceIp();
     }
 
     public String getDestination() {
-        return destination;
+        return packet.getDestinationIp();
     }
 
     public String getProtocol() {
-        return protocol;
+        return packet.getHighestProtocolName();
     }
 
     public int getLength() {
-        return length;
+        return packet.getPacketLength();
     }
 
     public String getInfo() {
-        return info;
+        return packet.getTimeStamp();
     }
 }
 

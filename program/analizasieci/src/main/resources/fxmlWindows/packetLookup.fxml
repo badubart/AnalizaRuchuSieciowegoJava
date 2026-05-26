@@ -36,15 +36,16 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="analizasieci.windowsControls.PacketLookupWindowController">
+<VBox prefHeight="679.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="analizasieci.windowsControls.PacketLookupWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -56,21 +57,34 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="1080.0" prefWidth="1920.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="627.0" prefWidth="920.0" VBox.vgrow="ALWAYS">
       <children>
             <Button fx:id="button1" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" style="-fx-text-fill: #002147; -fx-background-color: transparent; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #002147; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px 15px;" styleClass=".button-back:hover {    -fx-background-color: #002147;    -fx-text-fill: white;}" text="Wybór interfejsu" />
-            <TableView fx:id="packetList" layoutX="14.0" layoutY="73.0" prefHeight="547.0" prefWidth="1000.0">
+            <TableView fx:id="packetList" layoutX="14.0" layoutY="73.0" prefHeight="547.0" prefWidth="511.0" AnchorPane.bottomAnchor="34.0" AnchorPane.topAnchor="72.0">
               <columns>
-                <TableColumn fx:id="colNr" prefWidth="40.0" text="Nr" />
-                <TableColumn fx:id="colSource" prefWidth="85.0" text="Źródło" />
+                <TableColumn fx:id="colNr" prefWidth="38.0" text="Nr" />
+                <TableColumn fx:id="colSource" prefWidth="86.0" text="Źródło" />
                 <TableColumn fx:id="colDestination" text="Adresat" />
                 <TableColumn fx:id="colProtocol" prefWidth="60.0" text="Protokół" />
                 <TableColumn fx:id="colLength" prefWidth="50.0" text="Długość" />
-                <TableColumn fx:id="colInfo" prefWidth="400.0" text="Info" />
+                <TableColumn fx:id="colInfo" prefWidth="196.0" text="Info" />
               </columns>
             </TableView>
-            <!--<TreeView fx:id="protocolTree" layoutX="635.0" layoutY="98.0" prefHeight="355.0" prefWidth="361.0" />
-            <TextArea layoutX="635.0" layoutY="472.0" prefHeight="149.0" prefWidth="361.0" />-->
+            <SplitPane dividerPositions="0.7151088348271447" layoutX="558.0" layoutY="74.0" orientation="VERTICAL" prefHeight="547.0" prefWidth="437.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="558.0" AnchorPane.rightAnchor="27.0" AnchorPane.topAnchor="74.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <TreeView fx:id="protocolTree" layoutY="-26.0" prefHeight="395.0" prefWidth="437.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <TextArea fx:id="hexDump" prefHeight="149.0" prefWidth="437.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="5.684341886080802E-14" AnchorPane.rightAnchor="-2.6666666666666288" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+            <TextField fx:id="filterTextBox" layoutX="163.0" layoutY="20.0" prefHeight="37.0" prefWidth="832.0" AnchorPane.leftAnchor="163.0" AnchorPane.rightAnchor="26.0" />
       </children>
     </AnchorPane>
   </children>
