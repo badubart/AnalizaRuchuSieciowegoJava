@@ -1,11 +1,13 @@
 package analizasieci.packetCapture.packetLayers;
 
+import analizasieci.packetAnomalies.anomalies.ChecksumContext;
+import analizasieci.packetAnomalies.Checksummable;
 import org.pcap4j.packet.TcpPacket;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class L4TCP implements ProtocolLayer {
+public class L4TCP implements ProtocolLayer, Checksummable {
     private final TcpPacket packet;
 
     public L4TCP(TcpPacket packet) {
@@ -16,7 +18,17 @@ public class L4TCP implements ProtocolLayer {
     public String getProtocolName() {
         return "TCP";
     }
-
+    @Override
+    public boolean verifyChecksum(ChecksumContext ctx) {
+        if (packet == null){
+            return false;
+        }
+        if (ctx.srcIp == null || ctx.dstIp == null) {
+            System.out.println("Błąd: Brak adresów IP w kontekście!");
+            return false;
+        }
+        return packet.hasValidChecksum(ctx.srcIp, ctx.dstIp, false);
+    }
     @Override
     public Map<String, String> getFields() {
         Map<String, String> fields = new LinkedHashMap<>();

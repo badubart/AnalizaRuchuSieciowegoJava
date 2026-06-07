@@ -7,6 +7,7 @@ import analizasieci.windowsControls.WindowManager;
 import org.pcap4j.core.PcapNetworkInterface;
 
 import java.awt.*;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,6 +26,9 @@ public class Solution {
     }
     public void selectNetworkInterface(int n){
         packetCapture.setHandle(deviceManager.selectNetworkInterface(n));
+    }
+    public String getPcapFilePath(){
+        return "capture.pcap";
     }
     public void listeningLoop(Consumer<PacketLookupRow> uiUpdater){
         Thread captureThread = new Thread(() -> {

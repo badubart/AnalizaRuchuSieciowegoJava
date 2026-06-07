@@ -13,7 +13,6 @@ public class WindowManager {
 
     public void showDevSelectWindow(Solution program) {
         try {
-            // Load the FXML file
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxmlWindows/devSelectWindow.fxml"));
             Parent root = fxmlLoader.load();
 
@@ -30,7 +29,6 @@ public class WindowManager {
 
             stage.setScene(new Scene(root));
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Could not load the FXML file.");
@@ -38,7 +36,6 @@ public class WindowManager {
     }
     public void showPacketLookupWindow(Solution program){
         try {
-            // Make sure the path matches your project structure
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxmlWindows/packetLookup.fxml"));
 
             Parent root = fxmlLoader.load();

@@ -1,52 +1,85 @@
 package analizasieci.packetCapture;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
-
 import org.pcap4j.core.*;
-import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.IpV6Packet;
-import org.pcap4j.packet.ArpPacket;
 import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.TcpPacket;
-import org.pcap4j.packet.UdpPacket;
+
 public class PacketCaptureService {
     volatile boolean isListening;
     PcapHandle handle;
-    List<Packet> pakiety;
 
-    public PacketCaptureService(){
+    // Dodajemy referencję do writera
+    PacketFileWriter fileWriter;
+
+    public PacketCaptureService() {
         isListening = false;
-        pakiety = new ArrayList<>();
+        // Usunięto: pakiety = new ArrayList<>();
     }
-    public void setHandle(PcapHandle handle){
+
+    public void setHandle(PcapHandle handle) {
         this.handle = handle;
     }
-    public void listeningLoop(Consumer<PacketLookupRow> uiUpdater){
-        int i=0;
+
+    // Zmieniono sygnaturę: dodano pcapFilePath, w którym zapiszemy zrzut
+    public void listeningLoop(Consumer<PacketLookupRow> uiUpdater) {
+        String pcapFilePath = "capture.pcap";
+        int i = 0;
         Packet packet;
+
         try {
+            // Inicjalizacja zapisywania do pliku
+            fileWriter = new PacketFileWriter(handle, pcapFilePath);
             isListening = true;
+
             while (isListening) {
                 packet = handle.getNextPacket();
                 if (packet == null) {
                     continue;
                 }
+
+                // 1. Zapisz oryginalny pakiet do pliku i pobierz offset
+                long offset = fileWriter.writePacket(packet);
+
+                // 2. Szybka analiza tylko w celu wyciągnięcia metadanych dla UI
                 MyPacket analyzedPacket = PacketAnalyzer.analyze(packet);
-                pakiety.add(packet);
-                PacketLookupRow newPacket = new PacketLookupRow(i, analyzedPacket);
+
+                // 3. Stwórz lekki wiersz z offsetem i danymi podglądowymi (bez obiektu MyPacket)
+                PacketLookupRow newPacket = new PacketLookupRow(
+                        i,
+                        offset,
+                        analyzedPacket.getSourceIp(),
+                        analyzedPacket.getDestinationIp(),
+                        analyzedPacket.getHighestProtocolName(),
+                        analyzedPacket.getPacketLength(),
+                        analyzedPacket.getTimeStamp(),
+                        analyzedPacket.getInfo(),
+                        analyzedPacket.getSourceMAC(),      // <-- Dodane
+                        analyzedPacket.getDestinationMAC(), // <-- Dodane
+                        analyzedPacket.isAnomaly()          // <-- Dodane
+                );
+
+                // MyPacket nie jest nigdzie zapisywany, więc po wyjściu z tej iteracji
+                // pętli zostanie automatycznie usunięty przez Garbage Collector.
+
                 if (uiUpdater != null) {
                     uiUpdater.accept(newPacket);
                 }
                 i++;
             }
-        } catch(NotOpenException e){
-            System.out.println("nastąpił wyjątek NotOpenException!");
+        } catch (NotOpenException e) {
+            System.out.println("Nastąpił wyjątek NotOpenException!");
+        } catch (PcapNativeException e) {
+            System.out.println("Nie udało się otworzyć pliku pcap do zapisu: " + e.getMessage());
+        } finally {
+            // Bezpieczne zamknięcie pliku po wyjściu z pętli
+            if (fileWriter != null) {
+                fileWriter.close();
+            }
         }
     }
-    public void stopListening(){
+
+    public void stopListening() {
         isListening = false;
 
         if (handle != null && handle.isOpen()) {
@@ -59,25 +92,4 @@ public class PacketCaptureService {
             }
         }
     }
-
-
-//    public void loadDevices(){
-//        try {
-//            devices = Pcaps.findAllDevs();
-//        }catch(PcapNativeException e){
-//            System.out.println("Nie znaleziono pakietu Pcap4j!");
-//        }
-//    }
-//    public List<PcapNetworkInterface> getDevices(){
-//        return devices;
-//    }
-//    public void selectNetworkInterface(int n){
-//        try {
-//            handle = devices.get(n).openLive(65536, PromiscuousMode.PROMISCUOUS, 10);
-//        } catch(IndexOutOfBoundsException e){
-//            System.out.println("Podano nieistniejący interfejs!");
-//        } catch(PcapNativeException e) {
-//            System.out.println("Nie znaleziono pakietu Pcap4j!");
-//        }
-//    }
 }

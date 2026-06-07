@@ -1,40 +1,77 @@
 package analizasieci.packetCapture;
 
 public class PacketLookupRow {
-    private final  MyPacket packet;
     private final int id;
+    private final long fileOffset;
 
-    public PacketLookupRow(int id, MyPacket packet) {
+    // Lekkie pola potrzebne do wyświetlenia wiersza i filtrowania w UI
+    private final String sourceIp;
+    private final String destinationIp;
+    private final String protocol;
+    private final int length;
+    private final String timestamp;
+    private final String info;
+
+    // Nowe pola dodane na potrzeby filtrowania
+    private final String sourceMAC;
+    private final String destinationMAC;
+    private final boolean anomaly;
+
+    public PacketLookupRow(int id, long fileOffset, String sourceIp, String destinationIp,
+                           String protocol, int length, String timestamp, String info,
+                           String sourceMAC, String destinationMAC, boolean anomaly) {
         this.id = id;
-        this.packet = packet;
+        this.fileOffset = fileOffset;
+        this.sourceIp = sourceIp;
+        this.destinationIp = destinationIp;
+        this.protocol = protocol;
+        this.length = length;
+        this.timestamp = timestamp;
+        this.info = info;
+        this.sourceMAC = sourceMAC;
+        this.destinationMAC = destinationMAC;
+        this.anomaly = anomaly;
     }
 
     public int getId() {
         return id;
     }
 
-    public MyPacket getPacket(){
-        return packet;
+    public long getFileOffset() {
+        return fileOffset;
     }
+
     public String getSource() {
-        return packet.getSourceIp();
+        return sourceIp;
     }
 
     public String getDestination() {
-        return packet.getDestinationIp();
+        return destinationIp;
     }
 
     public String getProtocol() {
-        return packet.getHighestProtocolName();
+        return protocol;
     }
 
     public int getLength() {
-        return packet.getPacketLength();
+        return length;
     }
 
     public String getInfo() {
-        return packet.getTimeStamp();
+        return info;
+    }
+
+    // --- Nowe gettery ---
+
+    public String getSourceMAC() {
+        return sourceMAC;
+    }
+
+    public String getDestinationMAC() {
+        return destinationMAC;
+    }
+
+    public boolean isAnomaly() {
+        return anomaly;
     }
 }
-
-

@@ -7,6 +7,7 @@ import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,7 +37,7 @@ public class PacketLookupWindowController {
     @FXML private MenuItem fileQuit;
 
     private final ObservableList<PacketLookupRow> packetData = FXCollections.observableArrayList();
-
+    private final FilteredList<PacketLookupRow> filteredData = new FilteredList<>(packetData, p -> true);
     public void setProgram(Solution program) {
         this.program = program;
         program.listeningLoop(this::addPacketToTable);
@@ -52,7 +53,67 @@ public class PacketLookupWindowController {
         colLength.setCellValueFactory(new PropertyValueFactory<>("length"));
         colInfo.setCellValueFactory(new PropertyValueFactory<>("info"));
 
-        packetList.setItems(packetData);
+        packetList.setItems(filteredData);
+//        packetList.setItems(packetData);
+//////////////////////////////////////////////////////////////// do zmiany
+        filterTextBox.setPromptText("filter");
+        filterTextBox.setOnAction(event -> {
+            String newValue = filterTextBox.getText();
+
+            filteredData.setPredicate(packet -> {
+                if (newValue == null || newValue.trim().isEmpty()) {
+                    return true;
+                }
+
+                String[] conditions = newValue.split("&&");
+
+                for (String condition : conditions) {
+                    condition = condition.trim().toLowerCase();
+                    if (condition.isEmpty()) continue;
+
+                    if (condition.contains("==")) {
+                        String[] parts = condition.split("==", 2);
+                        String key = parts[0].trim();
+                        String val = parts[1].trim();
+
+                        boolean conditionMet = false;
+
+                        switch (key) {
+                            case "srcip":
+                                conditionMet = packet.getSource() != null && packet.getSource().toLowerCase().equals(val);
+                                break;
+                            case "dstip":
+                                conditionMet = packet.getDestination() != null && packet.getDestination().toLowerCase().equals(val);
+                                break;
+                            case "protocol":
+                                conditionMet = packet.getProtocol() != null && packet.getProtocol().toLowerCase().contains(val);
+                                break;
+                            case "info":
+                                conditionMet = packet.getInfo() != null && packet.getInfo().toLowerCase().contains(val);
+                                break;
+                            case "srcmac":
+                                conditionMet = packet.getSourceMAC() != null && packet.getSourceMAC().toLowerCase().equals(val);
+                                break;
+                            case "dstmac":
+                                conditionMet = packet.getDestinationMAC() != null && packet.getDestinationMAC().toLowerCase().equals(val);
+                                break;
+                            case "anomaly":
+                                conditionMet = packet.isAnomaly();
+                                break;
+                            default:
+                                return false;
+                        }
+
+                        if (!conditionMet) {
+                            return false;
+                        }
+
+                    }
+                }
+                return true;
+            });
+        });
+///////////////////////////////////////////////////////////////////////////////////////////////
 
         packetList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -89,7 +150,25 @@ public class PacketLookupWindowController {
     }
 
     private void updateDetailsArea(PacketLookupRow row) {
-        MyPacket packet = row.getPacket();
+        if (row == null) {
+            return;
+        }
+
+        MyPacket packet = null;
+
+        // UWAGA: Zakładam, że masz metodę getPcapFilePath() w klasie Solution,
+        // która zwraca ścieżkę do aktualnie zapisanego pliku zrzutu.
+        String pcapPath = program.getPcapFilePath();
+
+        try (analizasieci.packetCapture.PacketFileReader reader = new analizasieci.packetCapture.PacketFileReader(pcapPath)) {
+            // Wczytanie z dysku pełnego, ciężkiego obiektu MyPacket na żądanie
+            packet = reader.readPacket(row.getFileOffset());
+        } catch (Exception e) {
+            System.out.println("Błąd podczas odczytu pakietu z pliku pcap: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
         if (packet == null){
             System.out.println("Pakiet NULL");
             return;
@@ -98,16 +177,11 @@ public class PacketLookupWindowController {
         // 1. AKTUALIZACJA DRZEWA WARSTW (TreeView)
         TreeItem<String> rootItem = new TreeItem<>("Packet");
 
-        // Przechodzimy przez wszystkie warstwy (np. Ethernet, IPv4, TCP)
         for (ProtocolLayer layer : packet.getLayers()) {
-
-            // Tworzymy główną gałąź dla protokołu (np. "Internet Protocol Version 4 (IPv4)")
             TreeItem<String> layerNode = new TreeItem<>(layer.getProtocolName());
-            layerNode.setExpanded(true); // Domyślnie rozwijamy gałęzie
+            layerNode.setExpanded(true);
 
-            // Dodajemy szczegóły nagłówka jako liście
             for (Map.Entry<String, String> entry : layer.getFields().entrySet()) {
-                // Sklejamy klucz z wartością (np. "Source IP: 192.168.1.1")
                 TreeItem<String> fieldNode = new TreeItem<>(entry.getKey() + ": " + entry.getValue());
                 layerNode.getChildren().add(fieldNode);
             }
@@ -115,7 +189,6 @@ public class PacketLookupWindowController {
             rootItem.getChildren().add(layerNode);
         }
 
-        // Aktualizujemy drzewo w GUI
         protocolTree.setRoot(rootItem);
 
         // 2. AKTUALIZACJA ZRZUTU SZESNASTKOWEGO (Hex Dump)

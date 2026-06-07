@@ -1,11 +1,13 @@
 package analizasieci.packetCapture.packetLayers;
 
+import analizasieci.packetAnomalies.anomalies.ChecksumContext;
+import analizasieci.packetAnomalies.Checksummable;
 import org.pcap4j.packet.IpV4Packet;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class L3IPv4 implements ProtocolLayer {
+public class L3IPv4 implements ProtocolLayer, Checksummable {
     private final IpV4Packet packet;
     public L3IPv4(IpV4Packet packet){
         this.packet = packet;
@@ -13,6 +15,13 @@ public class L3IPv4 implements ProtocolLayer {
     @Override
     public String getProtocolName(){
         return "IPv4";
+    }
+
+    @Override
+    public boolean verifyChecksum(ChecksumContext ctx) {
+        ctx.srcIp = packet.getHeader().getSrcAddr();
+        ctx.dstIp = packet.getHeader().getDstAddr();
+        return packet.getHeader().hasValidChecksum(false);
     }
 
     @Override
