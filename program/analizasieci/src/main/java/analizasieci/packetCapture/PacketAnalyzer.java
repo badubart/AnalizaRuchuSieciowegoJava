@@ -17,7 +17,8 @@ public class PacketAnalyzer {
                 new DdosAnomaly(2000, 50, 500),      // 50 źródeł i 500 pkt / 2s na cel
                 new ChecksumContext(),
                 new TcpFlagsAnomaly(),
-                new LandAttackAnomaly()
+                new LandAttackAnomaly(),
+                new Retransmission()
     ));
     public static MyPacket analyze(Packet packet){
         return analyze(packet, System.currentTimeMillis());
