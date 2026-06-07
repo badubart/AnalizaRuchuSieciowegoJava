@@ -9,7 +9,7 @@ import java.util.List;
 public class MyPacket
 {
     private boolean anomaly;
-    private List<String> anomalyDescriptions;
+    private List<String> anomalyDescriptions = new ArrayList<>();
     private byte[] rawData;
     private String timeStamp;
     private String info;

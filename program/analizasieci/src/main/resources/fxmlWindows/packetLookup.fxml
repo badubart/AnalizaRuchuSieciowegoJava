@@ -51,6 +51,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
+              <MenuItem fx:id="generateRaport" mnemonicParsing="false" text = "Generate raport"/>
             <MenuItem fx:id="fileSaveAll" mnemonicParsing="false" text="Save As…" />
             <MenuItem fx:id="fileQuit" mnemonicParsing="false" text="Quit" />
           </items>

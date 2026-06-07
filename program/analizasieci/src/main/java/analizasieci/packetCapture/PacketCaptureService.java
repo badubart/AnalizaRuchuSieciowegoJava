@@ -1,13 +1,22 @@
 package analizasieci.packetCapture;
 
+import java.net.Inet4Address;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
+
+import analizasieci.network.NetworkUtils;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
 
 public class PacketCaptureService {
     volatile boolean isListening;
     PcapHandle handle;
+
+    private int totalSent = 0;
+    private int totalReceived = 0;
+    private int countSent = 0;
+    private int countReceived = 0;
+    private final String localAddress = NetworkUtils.getLocalIpv4Address();
 
     // Dodajemy referencję do writera
     PacketFileWriter fileWriter;
@@ -16,6 +25,8 @@ public class PacketCaptureService {
         isListening = false;
         // Usunięto: pakiety = new ArrayList<>();
     }
+
+
 
     public void setHandle(PcapHandle handle) {
         this.handle = handle;
@@ -43,6 +54,18 @@ public class PacketCaptureService {
 
                 // 2. Szybka analiza tylko w celu wyciągnięcia metadanych dla UI
                 MyPacket analyzedPacket = PacketAnalyzer.analyze(packet);
+
+                if (localAddress.equals(analyzedPacket.getSourceIp()))
+                {
+                    totalSent+=analyzedPacket.getPacketLength();
+                    countSent+=1;
+                }
+                else
+                {
+                    totalReceived+=analyzedPacket.getPacketLength();
+                    countReceived+=1;
+                }
+
 
                 // 3. Stwórz lekki wiersz z offsetem i danymi podglądowymi (bez obiektu MyPacket)
                 PacketLookupRow newPacket = new PacketLookupRow(
@@ -92,4 +115,9 @@ public class PacketCaptureService {
             }
         }
     }
+
+    public int getTotalSent(){return totalSent;}
+    public int getTotalReceived(){return totalReceived;}
+    public int getCountSent(){return countSent;}
+    public int getCountReceived(){return countReceived;}
 }

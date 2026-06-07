@@ -12,8 +12,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public class PacketLookupWindowController {
@@ -34,6 +37,8 @@ public class PacketLookupWindowController {
     @FXML private TextField filterTextBox;
 
     @FXML private Button button1;
+    @FXML private MenuItem fileSaveAll;
+    @FXML private MenuItem generateRaport;
     @FXML private MenuItem fileQuit;
 
     private final ObservableList<PacketLookupRow> packetData = FXCollections.observableArrayList();
@@ -123,6 +128,13 @@ public class PacketLookupWindowController {
 
         button1.setOnAction(event -> handleBackAction());
 
+        if(generateRaport!=null)
+        {
+            generateRaport.setOnAction(event-> handleGenerateReportAction());
+        }
+        if (fileSaveAll != null) {
+            fileSaveAll.setOnAction(event -> handleSaveAsAction());
+        }
         if (fileQuit != null) {
             fileQuit.setOnAction(event -> System.exit(0));
         }
@@ -207,6 +219,30 @@ public class PacketLookupWindowController {
             Stage stage = (Stage) button1.getScene().getWindow();
             stage.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleSaveAsAction() {
+        if (program == null || packetList == null || packetList.getScene() == null) {
+            return;
+        }
+    }
+    private void handleGenerateReportAction()
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Zapisz raport HTML");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("HTML", "*.html"));
+        fileChooser.setInitialFileName("raport.html");
+
+        File file = fileChooser.showSaveDialog(packetList.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        try {
+            program.generateHtmlReport(file.toPath());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

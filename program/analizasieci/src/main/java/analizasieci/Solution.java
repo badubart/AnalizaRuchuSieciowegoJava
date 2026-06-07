@@ -2,12 +2,14 @@ package analizasieci;
 
 import analizasieci.packetCapture.DeviceManager;
 import analizasieci.packetCapture.PacketCaptureService;
+import analizasieci.packetCapture.PacketAnalyzer;
 import analizasieci.packetCapture.PacketLookupRow;
+import analizasieci.report.HtmlReportGenerator;
 import analizasieci.windowsControls.WindowManager;
 import org.pcap4j.core.PcapNetworkInterface;
 
-import java.awt.*;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,5 +43,16 @@ public class Solution {
     }
     public void stopListening(){
         packetCapture.stopListening();
+    }
+
+    public void generateHtmlReport(Path outputFile) throws IOException {
+        HtmlReportGenerator.writeReport(
+                outputFile,
+                PacketAnalyzer.getAnomalyCount(),
+                packetCapture.getTotalSent(),
+                packetCapture.getTotalReceived(),
+                packetCapture.getCountSent(),
+                packetCapture.getCountReceived()
+        );
     }
 }
