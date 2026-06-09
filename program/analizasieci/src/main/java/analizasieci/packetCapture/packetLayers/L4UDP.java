@@ -22,7 +22,7 @@ public class L4UDP implements ProtocolLayer{
         fields.put("SrcPort", String.valueOf(packet.getHeader().getSrcPort().valueAsInt()));
         fields.put("DstPort", String.valueOf(packet.getHeader().getDstPort().valueAsInt()));
         fields.put("Length", String.valueOf(packet.getHeader().getLengthAsInt()));
-        fields.put("Checksum", String.format("0x%04x", packet.getHeader().getChecksum() & 0xFFFF));
+        fields.put("Checksum", String.valueOf(packet.getHeader().getChecksum() & 0xFFFF));
         return fields;
     }
 }

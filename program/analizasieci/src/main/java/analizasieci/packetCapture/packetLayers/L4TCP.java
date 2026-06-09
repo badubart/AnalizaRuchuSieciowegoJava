@@ -5,7 +5,7 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class L4TCP implements ProtocolLayer {
+public class L4TCP implements ProtocolLayer{
     private final TcpPacket packet;
 
     public L4TCP(TcpPacket packet) {
@@ -16,7 +16,7 @@ public class L4TCP implements ProtocolLayer {
     public String getProtocolName() {
         return "TCP";
     }
-
+    
     @Override
     public Map<String, String> getFields() {
         Map<String, String> fields = new LinkedHashMap<>();

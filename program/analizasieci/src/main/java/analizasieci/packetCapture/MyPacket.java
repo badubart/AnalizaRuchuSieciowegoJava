@@ -8,8 +8,11 @@ import java.util.List;
 
 public class MyPacket
 {
+    private boolean anomaly;
+    private List<String> anomalyDescriptions = new ArrayList<>();
     private byte[] rawData;
     private String timeStamp;
+    private String info;
     private int packetLength;
     private String sourceMAC = "";
     private String destinationMAC = "";
@@ -20,6 +23,18 @@ public class MyPacket
     private String highestProtocolName = "";
     private final List<ProtocolLayer> layers = new ArrayList<>();
 
+    public boolean isAnomaly() {
+        return anomaly;
+    }
+    public void setAnomaly(boolean anomaly) {
+        this.anomaly = anomaly;
+    }
+    public void addAnomalyDescription(String  anomalyDescription) {
+        this.anomalyDescriptions.add(anomalyDescription);
+    }
+    public List<String> getAnomalyDescription(){
+        return this.anomalyDescriptions;
+    }
     public String getTimeStamp(){
         return timeStamp;
     }
@@ -31,6 +46,9 @@ public class MyPacket
     }
     public String getDestinationMAC(){
         return destinationMAC;
+    }
+    public String getInfo(){
+        return info;
     }
     public String getSourceIp(){
         return sourceIp;
@@ -52,6 +70,9 @@ public class MyPacket
     }
     public void setPacketLength(int packetLength){
         this.packetLength = packetLength;
+    }
+    public void setInfo(String info){
+        this.info = info;
     }
     public void setSourceMAC(String sourceMAC){
         this.sourceMAC = sourceMAC;
