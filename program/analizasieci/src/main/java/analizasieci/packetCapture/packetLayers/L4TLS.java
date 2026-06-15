@@ -4,9 +4,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa TLS. Parsuje nagłówek rekordu TLS (typ, wersja) oraz – dla ClientHello –
+ * próbuje wydobyć nazwę serwera (SNI) z rozszerzeń handshake.
+ */
 public class L4TLS implements ProtocolLayer {
     private final Map<String, String> fields = new LinkedHashMap<>();
 
+    /**
+     * Buduje warstwę z surowych bajtów rekordu TLS.
+     *
+     * @param p bajty ładunku rozpoczynające się od nagłówka rekordu TLS
+     */
     public L4TLS(byte[] p) {
         int contentType = p[0] & 0xFF;
         fields.put("Record Type", recordType(contentType));

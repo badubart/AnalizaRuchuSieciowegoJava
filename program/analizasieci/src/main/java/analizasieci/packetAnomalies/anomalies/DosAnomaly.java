@@ -9,9 +9,18 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Detektor ataku DoS typu SYN flood.
+ * Dla każdego celu (adres:port) zlicza w oknie czasowym pakiety SYN (bez ACK);
+ * przekroczenie progu zgłasza jako możliwy SYN flood.
+ */
 public class DosAnomaly implements AnomalyDetector {
     private final long windowMs; private final int threshold;
     private final Map<String, SlidingWindow> byTarget = new HashMap<>();
+    /**
+     * @param windowMs  długość okna czasowego (ms)
+     * @param threshold próg liczby pakietów SYN w oknie, powyżej którego zgłaszana jest anomalia
+     */
     public DosAnomaly(long windowMs, int threshold) { this.windowMs = windowMs; this.threshold = threshold; }
 
     @Override public String inspect(MyPacket pkt, Packet raw, long now) {

@@ -7,7 +7,16 @@ import org.pcap4j.packet.*;
 import java.net.InetAddress;
 
 
+/**
+ * Detektor błędnych sum kontrolnych.
+ * Weryfikuje sumy kontrolne nagłówka IPv4 oraz segmentów TCP/UDP i zgłasza,
+ * gdy którakolwiek z nich jest nieprawidłowa (uszkodzony lub spreparowany pakiet).
+ */
 public class ChecksumAnomaly implements AnomalyDetector {
+    /**
+     * {@inheritDoc}
+     * @return nazwa wykrytej anomalii ("IPv4/TCP/UDP Checksum") lub {@code null}, gdy sumy są poprawne
+     */
     @Override public String inspect(MyPacket pkt, Packet raw, long now) {
         InetAddress srcIp = null, dstIp = null;
         IpV4Packet ip4 = raw.get(IpV4Packet.class);

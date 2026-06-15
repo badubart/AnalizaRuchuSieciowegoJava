@@ -7,11 +7,18 @@ import org.pcap4j.core.Pcaps;
 
 import java.util.List;
 
+/**
+ * Zarządza interfejsami sieciowymi widocznymi dla biblioteki pcap4j.
+ * Ładuje listę urządzeń przy utworzeniu i pozwala otworzyć uchwyt
+ * przechwytywania na wybranym interfejsie.
+ */
 public class DeviceManager {
     List<PcapNetworkInterface> devices;
+    /** Tworzy menedżera i od razu ładuje listę dostępnych interfejsów. */
     public DeviceManager(){
         loadDevices();
     }
+    /** Ładuje (lub odświeża) listę interfejsów sieciowych z pcap4j. */
     public void loadDevices(){
         try {
             devices = Pcaps.findAllDevs();
@@ -19,9 +26,16 @@ public class DeviceManager {
             System.out.println("Nie znaleziono pakietu Pcap4j!");
         }
     }
+    /** @return lista dostępnych interfejsów sieciowych. */
     public List<PcapNetworkInterface> getDevices(){
         return devices;
     }
+    /**
+     * Otwiera uchwyt przechwytywania (tryb promiscuous) na wybranym interfejsie.
+     *
+     * @param n indeks interfejsu na liście {@link #getDevices()}
+     * @return otwarty {@link PcapHandle} lub {@code null}, gdy indeks jest błędny lub wystąpił błąd
+     */
     public PcapHandle selectNetworkInterface(int n){
         try {
             return devices.get(n).openLive(65536, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, 10);
@@ -32,6 +46,8 @@ public class DeviceManager {
         }
         return null;
     }
+    /** Wypisuje na konsolę numerowaną listę interfejsów (diagnostyka). */
+    @Deprecated
     public void getInterfacesInfo(){
         for (int i = 0; i < devices.size(); i++) {
             System.out.println(i + " -> " + devices.get(i).getDescription());

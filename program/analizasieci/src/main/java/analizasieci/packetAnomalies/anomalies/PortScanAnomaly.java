@@ -8,9 +8,18 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Detektor skanowania portów.
+ * Dla każdego adresu źródłowego zlicza w oknie czasowym liczbę różnych celów
+ * (adres:port) sondowanych pakietami SYN; przekroczenie progu zgłasza jako skan.
+ */
 public class PortScanAnomaly implements AnomalyDetector {
     private final long windowMs; private final int threshold;
     private final Map<String, DistinctWindow<String>> bySource = new HashMap<>();
+    /**
+     * @param windowMs  długość okna czasowego (ms)
+     * @param threshold próg liczby różnych celów, powyżej którego zgłaszany jest skan
+     */
     public PortScanAnomaly(long windowMs, int threshold) { this.windowMs = windowMs; this.threshold = threshold; }
 
     @Override public String inspect(MyPacket pkt, Packet raw, long now) {

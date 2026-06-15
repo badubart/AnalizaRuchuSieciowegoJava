@@ -5,6 +5,9 @@ import org.pcap4j.packet.ArpPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa ARP. Udostępnia operację (request/reply) oraz adresy MAC i IP obu stron.
+ */
 public class L2ARP implements ProtocolLayer{
     private final ArpPacket packet;
     public L2ARP(ArpPacket packet){

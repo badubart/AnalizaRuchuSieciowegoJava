@@ -4,6 +4,10 @@ import analizasieci.packetAnomalies.AnomalyDetector;
 import analizasieci.packetCapture.MyPacket;
 import org.pcap4j.packet.Packet;
 
+/**
+ * Detektor niedozwolonych kombinacji flag TCP używanych w skanowaniu.
+ * Rozpoznaje skan NULL (brak flag), skan XMAS (FIN+PSH+URG) oraz nielegalne SYN+FIN.
+ */
 public class TcpFlagsAnomaly implements AnomalyDetector {
     @Override public String inspect(MyPacket pkt, Packet raw, long now) {
         org.pcap4j.packet.TcpPacket tcp = raw.get(org.pcap4j.packet.TcpPacket.class);

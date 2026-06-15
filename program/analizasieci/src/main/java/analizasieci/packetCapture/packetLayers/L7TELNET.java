@@ -3,8 +3,17 @@ package analizasieci.packetCapture.packetLayers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa Telnet. Rozpoznaje negocjację opcji (IAC + WILL/WONT/DO/DONT) albo
+ * oznacza ładunek jako dane.
+ */
 public class L7TELNET implements ProtocolLayer{
     private final Map<String, String> fields = new LinkedHashMap<>();
+    /**
+     * Buduje warstwę z surowego ładunku Telnet.
+     *
+     * @param p bajty ładunku Telnet
+     */
     public L7TELNET(byte[] p) {
         if (p.length >= 3 && (p[0] & 0xFF) == 0xFF) {
             fields.put("Type", "Option negotiation");

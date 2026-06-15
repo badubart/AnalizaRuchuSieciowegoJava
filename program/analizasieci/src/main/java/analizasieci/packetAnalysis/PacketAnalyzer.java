@@ -1,7 +1,8 @@
-package analizasieci.packetCapture;
+package analizasieci.packetAnalysis;
 
 import analizasieci.packetAnomalies.AnomalyEngine;
 import analizasieci.packetAnomalies.anomalies.*;
+import analizasieci.packetCapture.MyPacket;
 import analizasieci.packetCapture.packetLayers.*;
 import org.pcap4j.packet.*;
 import org.pcap4j.packet.namednumber.ArpOperation;
@@ -13,6 +14,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Centralny analizator pakietów.
+ * <p>
+ * Rozkłada surowy pakiet pcap4j na kolejne warstwy (Ethernet, VLAN, ARP, IPv4/IPv6,
+ * ICMP, TCP/UDP, a dla ładunku TCP/UDP – analizę warstwy aplikacji przez
+ * {@link L7PacketAnalyzer}), wypełnia model {@link MyPacket} oraz przepuszcza pakiet
+ * przez {@link AnomalyEngine}. Współdzielony silnik anomalii jest statyczny, więc
+ * liczniki anomalii kumulują się dla całej sesji przechwytywania.
+ */
 public class PacketAnalyzer {
     private static final AnomalyEngine ANOMALY_ENGINE = new AnomalyEngine(List.of(
                 new PortScanAnomaly(5000, 20),
@@ -22,9 +32,22 @@ public class PacketAnalyzer {
                 new TcpFlagsAnomaly(),
                 new LandAttackAnomaly()
     ));
+    /**
+     * Analizuje pakiet z bieżącym znacznikiem czasu (na żywo).
+     *
+     * @param packet surowy pakiet pcap4j
+     * @return wypełniony model {@link MyPacket}
+     */
     public static MyPacket analyze(Packet packet){
         return analyze(packet, System.currentTimeMillis());
     }
+    /**
+     * Analizuje pakiet z podanym znacznikiem czasu (np. odczyt z pliku pcap).
+     *
+     * @param packet surowy pakiet pcap4j
+     * @param tsMs   znacznik czasu pakietu w milisekundach
+     * @return model {@link MyPacket} z warstwami, metadanymi i oznaczeniem anomalii
+     */
     public static MyPacket analyze(Packet packet, long tsMs) {
         MyPacket myPacket = new MyPacket();
 
@@ -118,6 +141,7 @@ public class PacketAnalyzer {
 
         return myPacket;
     }
+    /** @return niemodyfikowalna mapa: nazwa anomalii → liczba wystąpień (do raportu). */
     public static java.util.Map<String, Integer> getAnomalyCount() {
         return Collections.unmodifiableMap(ANOMALY_ENGINE.getAnomalyCount());
     }

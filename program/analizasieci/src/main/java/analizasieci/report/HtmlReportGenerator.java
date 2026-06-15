@@ -9,11 +9,29 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Map;
 
+/**
+ * Generator raportu HTML z podsumowaniem sesji przechwytywania.
+ * <p>
+ * Buduje samodzielny dokument HTML (z wbudowanymi stylami) zawierający statystyki
+ * ruchu (liczba i wolumen pakietów wysłanych/odebranych) oraz tabelę wykrytych
+ * anomalii. Klasa narzędziowa – bez instancji.
+ */
 public final class HtmlReportGenerator {
 
     private HtmlReportGenerator() {
     }
 
+    /**
+     * Generuje raport i zapisuje go do pliku (UTF-8).
+     *
+     * @param outputFile    docelowy plik .html
+     * @param anomalyCount  mapa: typ anomalii → liczba wystąpień
+     * @param totalSent     łączny wolumen wysłanych danych (bajty)
+     * @param totalReceived łączny wolumen odebranych danych (bajty)
+     * @param countSent     liczba wysłanych pakietów
+     * @param countReceived liczba odebranych pakietów
+     * @throws IOException przy błędzie zapisu pliku
+     */
     public static void writeReport(
             Path outputFile,
             Map<String, Integer> anomalyCount,
@@ -29,6 +47,16 @@ public final class HtmlReportGenerator {
         );
     }
 
+    /**
+     * Buduje treść raportu jako łańcuch HTML (bez zapisu do pliku).
+     *
+     * @param anomalyCount  mapa: typ anomalii → liczba wystąpień (może być {@code null})
+     * @param totalSent     łączny wolumen wysłanych danych (bajty)
+     * @param totalReceived łączny wolumen odebranych danych (bajty)
+     * @param countSent     liczba wysłanych pakietów
+     * @param countReceived liczba odebranych pakietów
+     * @return kompletny dokument HTML
+     */
     public static String buildHtml(
             Map<String, Integer> anomalyCount,
             int totalSent,

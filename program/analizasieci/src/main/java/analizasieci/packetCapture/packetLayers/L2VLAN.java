@@ -5,6 +5,10 @@ import org.pcap4j.packet.Dot1qVlanTagPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa znacznika VLAN (IEEE 802.1Q). Udostępnia VLAN ID, priorytet, flagę DEI/CFI
+ * oraz typ przenoszonego protokołu.
+ */
 public class L2VLAN implements ProtocolLayer{
     private final Dot1qVlanTagPacket packet;
 

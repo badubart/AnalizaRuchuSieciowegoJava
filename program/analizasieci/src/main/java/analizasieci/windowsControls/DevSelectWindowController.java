@@ -11,6 +11,11 @@ import javafx.stage.Stage;
 
 import java.util.stream.Collectors;
 
+/**
+ * Kontroler okna wyboru interfejsu sieciowego.
+ * Wyświetla listę dostępnych interfejsów; podwójne kliknięcie wybiera interfejs
+ * i otwiera okno podglądu pakietów.
+ */
 public class DevSelectWindowController {
     Solution program;
     @FXML
@@ -22,11 +27,17 @@ public class DevSelectWindowController {
     @FXML
     private MenuItem fileQuit;
 
+    /**
+     * Wstrzykuje logikę aplikacji i wypełnia listę interfejsów.
+     *
+     * @param program obiekt logiki aplikacji
+     */
     public void setProgram(Solution program) {
         this.program = program;
         setup();
     }
 
+    /** Inicjalizacja JavaFX: podpięcie obsługi podwójnego kliknięcia i pozycji menu. */
     public void initialize() {
         devList.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && (!devList.getSelectionModel().isEmpty())) {

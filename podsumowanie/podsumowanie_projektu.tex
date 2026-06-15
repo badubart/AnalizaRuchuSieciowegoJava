@@ -1,0 +1,102 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{longtable}
+\geometry{margin=2.5cm}
+
+\title{Sprawozdanie z realizacji projektu - Język Java}
+\author{Eryk Witkowski, Bartosz Badura}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{1. Tytuł projektu}
+\textbf{Analiza ruchu sieciowego [NetDolphin?]}\\
+Aplikacja pozwalająca na monitorowanie i wykrywanie podstawowych anomalii w ruchu sieciowym
+
+\section*{2. Założone vs. zrealizowane funkcjonalności}
+
+\begin{longtable}{|p{6cm}|p{4cm}|p{4cm}|}
+\hline
+\textbf{Funkcjonalność} & \textbf{Założona} & \textbf{Zrealizowana} \\
+\hline
+Przechwytywanie i analiza pakietów & Tak & Tak \\
+\hline
+Wykrywanie podejrzanych pakietów & Tak & Tak \\
+\hline
+generowanie raportów bezpieczeństwa & Tak & Tak \\
+\hline
+\end{longtable}
+
+\textbf{Zrealizowano: 3 z 3 zaplanowanych funkcjonalności ( 100\%)}
+
+\section*{3. Realizacja wymagań}
+
+\subsection*{Funkcjonalne vs. niefunkcjonalne}
+
+\begin{longtable}{|p{6cm}|p{4cm}|p{4cm}|}
+\hline
+\textbf{Typ Wymagań} & \textbf{Założone} & \textbf{Zrealizowane} \\
+\hline
+Funkcjonalne & 8 & 7 \\
+\hline
+Niefunkcjonalne & 4 & 3 \\
+\hline
+\end{longtable}
+
+\textbf{Procent realizacji:} Funkcjonalne: 87.5\%, Niefunkcjonalne: 75\%
+
+\section*{4. Rzeczywisty nakład pracy}
+
+\begin{itemize}
+    \item Planowany czas pracy: 120-160 godzin
+    \item Rzeczywisty czas pracy: 100 godzin
+\end{itemize}
+
+\section*{5. Napotkane problemy i rozwiązania}
+
+\begin{itemize}
+    \item \textbf{Problemy z przechowywaniem odebranych pakietów:} przechowywanie wszystkich pakietów w prostej strukturze jak ArrayList w programie powodowało zacinanie się programu, a przy większej liczbie pakietów (np. 5000) - całkowite zatrzymanie systemu\\
+    \textit{Rozwiązanie:} Zmiana podejścia na dodawanie pakietów do cache'a (pliku .pcap) - pozwala na bezproblemowe przechowanie do miliona pakietów, z zastrzeżeniem co do znacząco rosnącego rozmiaru pliku
+
+    \item \textbf{Trudność w testowaniu rozwiązania:} przez charakter rozwiązania napisanie testów jednostkowych do większości funkcjonalności było bardzo skomplikowane\\
+    \textit{Rozwiązanie:} napisanie testów jedynie do niezależnych od wyłapywanych pakietów metod i klas pomocniczych
+\end{itemize}
+
+\section*{6. Możliwości Rozwoju}
+
+\begin{itemize}
+    \item Dodanie oznaczenia pakietów podejrzanych o bycie anomalią na czerwono w tabeli  
+    \item Dodanie większej liczby obsługiwanych protokołów
+    \item Dodanie analizy pakietów bazującej na machine-learningu
+    \item Możliwość otworzenia podglądu zapisanej listy pakietów
+    \item Możliwość zatrzymania wyłapywania pakietów z poziomu UI
+    \item Polepszenie filtrowania pakietów - dodanie interpretera, podpowiadanie opcji/składni itp. (w tym momencie składnia jest restrykcyjna i wymaga oddzielenia precyzyjnych nazw (srcip, srcmac itd..) dwoma znakami \&)
+\end{itemize}
+
+\section*{7. Zrzuty Ekranu}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshot.png}
+    \caption{Wybór interfejsu sieciowego}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshot1.png}
+    \caption{Podgląd pakietów}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshot2.png}
+    \caption{Raport HTML}
+\end{figure}
+
+\end{document}

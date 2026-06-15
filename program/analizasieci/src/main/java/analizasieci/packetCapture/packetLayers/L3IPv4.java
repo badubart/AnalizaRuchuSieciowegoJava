@@ -7,6 +7,11 @@ import org.pcap4j.packet.IpV4Packet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa 3 – IPv4. Udostępnia adresy IP, TTL, protokół wyższej warstwy, długość
+ * i sumę kontrolną. Implementuje {@link Checksummable} – potrafi zweryfikować
+ * poprawność sumy kontrolnej nagłówka.
+ */
 public class L3IPv4 implements ProtocolLayer, Checksummable {
     private final IpV4Packet packet;
     public L3IPv4(IpV4Packet packet){

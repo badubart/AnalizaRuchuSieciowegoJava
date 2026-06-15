@@ -1,8 +1,13 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L5RPC;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
+/**
+ * Matcher protokołu ONC RPC (TCP i UDP, porty 111/2049 – Portmapper i NFS).
+ * Rozpoznaje nagłówek RPC: typ komunikatu (0 = CALL, 1 = REPLY) oraz wersję RPC = 2;
+ * dla TCP uwzględnia 4-bajtowy marker fragmentu (przesunięcie offsetu).
+ */
 public class RpcMatcher  extends ProtocolMatcher{
     public RpcMatcher() { super("RPC", L4Protocol.BOTH, 111, 2049); }   // Portmapper + NFS, TCP i UDP
     @Override public boolean identify(byte[] p, int s, int d, boolean overTcp) {

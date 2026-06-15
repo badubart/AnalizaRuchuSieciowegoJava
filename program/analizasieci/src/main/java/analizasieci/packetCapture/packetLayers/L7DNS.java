@@ -5,6 +5,10 @@ import org.pcap4j.packet.DnsPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa DNS. Udostępnia identyfikator transakcji, opcode, flagę odpowiedzi,
+ * liczbę zapytań i odpowiedzi oraz nazwę pierwszej odpytywanej domeny.
+ */
 public class L7DNS implements ProtocolLayer{
     private final DnsPacket packet;
     public L7DNS(DnsPacket packet){

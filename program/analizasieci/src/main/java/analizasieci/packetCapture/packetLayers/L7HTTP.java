@@ -3,6 +3,10 @@ package analizasieci.packetCapture.packetLayers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa protokołu HTTP. Parsuje tekst HTTP na linię startową oraz nagłówki
+ * (do pierwszej pustej linii) i udostępnia je jako pola do wyświetlenia.
+ */
 public class L7HTTP implements ProtocolLayer {
     private final String httpText;
 

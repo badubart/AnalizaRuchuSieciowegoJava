@@ -4,11 +4,20 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
-import java.net.Inet4Address;
+
 import analizasieci.network.NetworkUtils;
+import analizasieci.packetAnalysis.PacketAnalyzer;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
 
+/**
+ * Usługa przechwytywania pakietów z wybranego interfejsu.
+ * <p>
+ * W pętli nasłuchu odbiera pakiety z uchwytu pcap, zapisuje je do tymczasowego pliku
+ * pcap ({@link PacketFileWriter}), analizuje ({@link PacketAnalyzer}) i przekazuje
+ * lekki wiersz {@link PacketLookupRow} do UI. Prowadzi też statystyki wysłanych/
+ * odebranych pakietów i bajtów (na podstawie lokalnego adresu IP).
+ */
 public class PacketCaptureService {
     volatile boolean isListening;
     PcapHandle handle;
@@ -25,11 +34,18 @@ public class PacketCaptureService {
         isListening = false;
     }
 
+    /** Ustawia uchwyt pcap (otwarty na wybranym interfejsie), na którym odbywa się nasłuch. */
     public void setHandle(PcapHandle handle) {
         this.handle = handle;
     }
 
 
+    /**
+     * Główna pętla nasłuchu: odbiera, zapisuje i analizuje pakiety aż do
+     * {@link #stopListening()}. Powinna być uruchamiana na osobnym wątku.
+     *
+     * @param uiUpdater callback wywoływany dla każdego przechwyconego pakietu (może być {@code null})
+     */
     public void listeningLoop(Consumer<PacketLookupRow> uiUpdater) {
         int i = 0;
         Packet packet;
@@ -91,6 +107,7 @@ public class PacketCaptureService {
         }
     }
 
+    /** Sygnalizuje zatrzymanie pętli nasłuchu i zamyka uchwyt pcap. */
     public void stopListening() {
         isListening = false;
 
@@ -104,12 +121,18 @@ public class PacketCaptureService {
             }
         }
     }
+    /** @return ścieżka tymczasowego pliku pcap z bieżącą sesją przechwytywania. */
     public Path getPath(){
         return Paths.get(System.getProperty("user.dir"), "temp_capture.pcap");
     }
+    /** @return obiekt zapisujący pakiety do pliku (lub {@code null}, gdy nasłuch nie wystartował). */
     public PacketFileWriter getFileWriter(){return fileWriter;}
+    /** @return łączny wolumen wysłanych danych w bajtach. */
     public int getTotalSent(){return totalSent;}
+    /** @return łączny wolumen odebranych danych w bajtach. */
     public int getTotalReceived(){return totalReceived;}
+    /** @return liczba wysłanych pakietów. */
     public int getCountSent(){return countSent;}
+    /** @return liczba odebranych pakietów. */
     public int getCountReceived(){return countReceived;}
 }

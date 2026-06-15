@@ -6,8 +6,14 @@ import org.pcap4j.packet.Packet;
 
 import java.net.InetAddress;
 
+/**
+ * Kontekst weryfikacji sumy kontrolnej – przechowuje adresy IP potrzebne do
+ * zbudowania pseudo-nagłówka przy liczeniu sum TCP/UDP.
+ */
 public class ChecksumContext implements AnomalyDetector {
+    /** Adres źródłowy (do pseudo-nagłówka). */
     public InetAddress srcIp;
+    /** Adres docelowy (do pseudo-nagłówka). */
     public InetAddress dstIp;
 
     @Override

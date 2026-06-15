@@ -1,5 +1,12 @@
 package analizasieci.packetCapture;
 
+/**
+ * Lekki, niezmienny model wiersza tabeli pakietów w UI.
+ * <p>
+ * Zawiera tylko dane potrzebne do wyświetlenia i filtrowania (adresy, protokół,
+ * długość, info, MAC, flaga anomalii) oraz {@code fileOffset} – pozycję pełnego
+ * pakietu w pliku pcap, używaną do doczytania szczegółów na żądanie.
+ */
 public class PacketLookupRow {
     private final int id;
     private final long fileOffset;

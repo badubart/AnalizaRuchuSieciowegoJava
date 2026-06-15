@@ -1,10 +1,14 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L7SMTP;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Matcher protokołu SMTP (TCP, porty 25/587/465).
+ * Rozpoznaje komendy (HELO, EHLO, MAIL FROM, ...) oraz powitanie "220" zawierające "SMTP".
+ */
 public class SmtpMatcher  extends ProtocolMatcher{
     public SmtpMatcher() { super("SMTP", L4Protocol.TCP, 25, 587, 465); }
     @Override public boolean identify(byte[] p, int s, int d, boolean tcp) {

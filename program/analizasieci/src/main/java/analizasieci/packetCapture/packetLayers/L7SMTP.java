@@ -4,8 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa SMTP. Prezentuje pierwszą linię komendy lub odpowiedzi SMTP.
+ */
 public class L7SMTP implements ProtocolLayer{
     private final Map<String, String> fields = new LinkedHashMap<>();
+    /**
+     * Buduje warstwę z surowego ładunku SMTP.
+     *
+     * @param p bajty ładunku SMTP
+     */
     public L7SMTP(byte[] p) {
         String first = new String(p, 0, Math.min(p.length, 256), StandardCharsets.UTF_8)
                 .split("\r\n", 2)[0].trim();

@@ -1,8 +1,13 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L4TLS;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
+/**
+ * Matcher protokołu TLS (TCP, porty 443/8443).
+ * Rozpoznaje rekord TLS Handshake (ContentType 0x16) z komunikatem ClientHello/ServerHello
+ * oraz mapuje port na konkretną usługę (np. 443 → HTTPS, 993 → IMAPS).
+ */
 public class TlsMatcher extends ProtocolMatcher{
     public TlsMatcher() { super("TLS", L4Protocol.TCP, 443, 8443); }
     @Override public boolean identify(byte[] p, int s, int d, boolean tcp) {
@@ -22,13 +27,13 @@ public class TlsMatcher extends ProtocolMatcher{
     @Override
     public String getSessionName(int srcPort, int dstPort) {
         String app = byPort(dstPort);
-        if (app == null) app = byPort(srcPort);     // serwer może być źródłem (pakiety serwer→klient)
-        return app != null ? app : "TLS";           // nieznana usługa → zostaw TLS
+        if (app == null) app = byPort(srcPort);
+        return app != null ? app : "TLS";
     }
     @Override
     public String getApplicationProtocol(int srcPort, int dstPort) {
         String app = byPort(dstPort);
-        return app != null ? app : byPort(srcPort);   // null, jeśli nieznana usługa
+        return app != null ? app : byPort(srcPort);
     }
     @Override
     public ProtocolLayer createContinuationLayer(byte[] p, boolean overTcp) { return new L4TLS(p); }

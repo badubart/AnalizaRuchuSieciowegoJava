@@ -4,6 +4,9 @@ import org.pcap4j.packet.EthernetPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa 2 – ramka Ethernet. Udostępnia adresy MAC źródła i celu oraz typ EtherType.
+ */
 public class L2Ethernet implements ProtocolLayer{
     private final EthernetPacket packet;
     public L2Ethernet(EthernetPacket packet){

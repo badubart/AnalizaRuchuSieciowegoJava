@@ -7,6 +7,10 @@ import org.pcap4j.packet.UdpPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa 4 – UDP. Udostępnia porty, długość i sumę kontrolną. Implementuje
+ * {@link Checksummable} – weryfikuje sumę kontrolną z użyciem pseudo-nagłówka IP.
+ */
 public class L4UDP implements ProtocolLayer, Checksummable {
     private final UdpPacket packet;
     public L4UDP(UdpPacket packet) {

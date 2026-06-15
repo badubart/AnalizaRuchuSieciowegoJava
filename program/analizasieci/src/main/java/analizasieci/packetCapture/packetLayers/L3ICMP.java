@@ -6,6 +6,9 @@ import org.pcap4j.packet.IcmpV4EchoPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa ICMPv4. Udostępnia typ i kod komunikatu ICMP oraz sumę kontrolną.
+ */
 public class L3ICMP implements ProtocolLayer {
     private final IcmpV4CommonPacket packet;
 

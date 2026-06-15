@@ -3,9 +3,18 @@ package analizasieci.packetCapture.packetLayers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa DHCP. Odczytuje pole op (request/reply) oraz typ komunikatu DHCP
+ * (DISCOVER, OFFER, REQUEST, ACK, ...) z opcji 53.
+ */
 public class L7DHCP implements ProtocolLayer {
     private final Map<String, String> fields = new LinkedHashMap<>();
 
+    /**
+     * Buduje warstwę z surowego ładunku DHCP.
+     *
+     * @param p bajty komunikatu DHCP (z magic cookie i sekcją opcji)
+     */
     public L7DHCP(byte[] p) {
         fields.put("Op", p[0] == 1 ? "BOOTREQUEST (1)" : "BOOTREPLY (2)");
         Integer type = findOption(p, 53);   // DHCP Message Type

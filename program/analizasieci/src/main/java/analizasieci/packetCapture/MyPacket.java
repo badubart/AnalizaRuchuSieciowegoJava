@@ -6,6 +6,14 @@ import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model pojedynczego, przeanalizowanego pakietu.
+ * <p>
+ * Przechowuje "spłaszczone" metadane wygodne do wyświetlenia i filtrowania
+ * (adresy IP/MAC, porty, długość, znacznik czasu, najwyższy rozpoznany protokół),
+ * listę rozpoznanych warstw protokołów ({@link ProtocolLayer}), informacje
+ * o wykrytych anomaliach oraz surowe bajty pakietu.
+ */
 public class MyPacket
 {
     private boolean anomaly;
@@ -95,9 +103,11 @@ public class MyPacket
     public void setHighestProtocolName(String highestProtocolName){
         this.highestProtocolName = highestProtocolName;
     }
+    /** Dodaje kolejną rozpoznaną warstwę protokołu (od najniższej do najwyższej). */
     public void addLayer(ProtocolLayer layer){
         layers.add(layer);
     }
+    /** @return lista rozpoznanych warstw protokołów w kolejności od najniższej do najwyższej. */
     public List<ProtocolLayer> getLayers(){
         return layers;
     }
@@ -111,6 +121,12 @@ public class MyPacket
     public void setRawData(byte[] rawData) {
         this.rawData = rawData;
     }
+    /**
+     * Buduje czytelny zrzut heksadecymalny surowych bajtów pakietu
+     * (offset, 16 bajtów heks oraz kolumna ASCII), w stylu klasycznego hex-dumpa.
+     *
+     * @return wielowierszowy tekst zrzutu lub komunikat, gdy pakiet nie ma danych.
+     */
     public String getHexDump() {
         if (rawData == null || rawData.length == 0) {
             return "Brak danych pakietu.";

@@ -5,6 +5,10 @@ import org.pcap4j.packet.IpV6Packet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa 3 – IPv6. Udostępnia adresy IPv6, klasę ruchu, limit przeskoków (hop limit)
+ * oraz typ następnego nagłówka.
+ */
 public class L3IPv6 implements ProtocolLayer{
     private final IpV6Packet packet;
     public L3IPv6(IpV6Packet packet){

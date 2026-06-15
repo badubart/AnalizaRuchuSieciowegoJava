@@ -3,10 +3,21 @@ import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa ONC RPC (i rozpoznanie NFS). Parsuje nagłówek RPC: XID, typ komunikatu,
+ * a dla wywołań (CALL) także numer i wersję programu oraz procedurę; rozpoznaje
+ * programy NFS (100003) i Portmap (100000). Dla TCP pomija 4-bajtowy marker fragmentu.
+ */
 public class L5RPC implements ProtocolLayer {
     private final Map<String, String> fields = new LinkedHashMap<>();
     private boolean isNfsPacket = false;
 
+    /**
+     * Buduje warstwę z surowego ładunku RPC.
+     *
+     * @param payload bajty ładunku RPC
+     * @param overTcp {@code true}, gdy RPC jest przenoszone przez TCP (z markerem fragmentu)
+     */
     public L5RPC(byte[] payload, boolean overTcp) {
         if (payload.length < 24) {
             fields.put("Error", "Payload too small for RPC");
@@ -48,6 +59,7 @@ public class L5RPC implements ProtocolLayer {
         }
     }
 
+    /** @return {@code true}, gdy rozpoznano ruch NFS (program 100003). */
     public boolean isNfs() {
         return isNfsPacket;
     }

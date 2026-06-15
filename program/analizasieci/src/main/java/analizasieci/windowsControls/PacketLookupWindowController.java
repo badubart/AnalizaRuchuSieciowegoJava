@@ -14,11 +14,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Optional;
 
+/**
+ * Kontroler okna podglądu pakietów.
+ * <p>
+ * Wyświetla na bieżąco przechwytywane pakiety w tabeli, umożliwia ich filtrowanie
+ * (np. {@code srcip==...}, {@code protocol==http}, {@code anomaly}), pokazuje warstwy
+ * i zrzut heksadecymalny zaznaczonego pakietu, a także obsługuje zapis przechwyconych
+ * pakietów, generowanie raportu HTML oraz pytanie o zapis przy wyjściu/powrocie.
+ */
 public class PacketLookupWindowController {
 
     private Solution program;
@@ -137,7 +149,7 @@ public class PacketLookupWindowController {
         }
 
         if (fileQuit != null) {
-            fileQuit.setOnAction(event -> System.exit(0));
+            fileQuit.setOnAction(event -> handleQuitAction());
         }
         protocolTree.setShowRoot(false);
         if(hexDump != null) {
@@ -206,7 +218,11 @@ public class PacketLookupWindowController {
     }
 
     private void handleBackAction() {
+        if (!confirmAndMaybeSave()) {
+            return; // użytkownik anulował powrót
+        }
         program.stopListening();
+        program.deleteTempCaptureFile();
 
         try {
             WindowManager manager = new WindowManager();
@@ -220,7 +236,80 @@ public class PacketLookupWindowController {
     }
 
     private void handleSaveAsAction() {
-        program.closeAndSave();
+        File file = showSaveCaptureDialog();
+        if (file != null) {
+            saveCaptureTo(file.toPath());
+        }
+    }
+
+    private File showSaveCaptureDialog() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Zapisz przechwycone pakiety");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki pcap", "*.pcap"));
+        fileChooser.setInitialFileName(
+                LocalTime.now().format(DateTimeFormatter.ofPattern("HHmmss")) + "_captured_packets.pcap");
+        return fileChooser.showSaveDialog(packetList.getScene().getWindow());
+    }
+
+    private boolean saveCaptureTo(Path path) {
+        try {
+            program.saveCaptureAs(path);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "Nie udało się zapisać pliku:\n" + e.getMessage(), ButtonType.OK);
+            alert.setHeaderText(null);
+            alert.showAndWait();
+            return false;
+        }
+    }
+
+    private void handleQuitAction() {
+        if (confirmAndMaybeSave()) {
+            program.stopListening();
+            program.deleteTempCaptureFile();
+            Platform.exit();
+        }
+    }
+
+    public void handleCloseRequest(WindowEvent event) {
+        if (confirmAndMaybeSave()) {
+            program.stopListening();
+            program.deleteTempCaptureFile();
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+    }
+
+    private boolean confirmAndMaybeSave() {
+        if (!program.hasCapturedPackets()) {
+            return true;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Zapis");
+        alert.setHeaderText("Zapisać przechwycone pakiety?");
+        alert.setContentText(null);
+
+        ButtonType save = new ButtonType("Zapisz", ButtonBar.ButtonData.YES);
+        ButtonType dontSave = new ButtonType("Nie zapisuj", ButtonBar.ButtonData.NO);
+        ButtonType cancel = new ButtonType("Anuluj", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(save, dontSave, cancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() == cancel) {
+            return false;
+        }
+        if (result.get() == save) {
+            File file = showSaveCaptureDialog();
+            if (file == null) {
+                return false;
+            }
+            return saveCaptureTo(file.toPath());
+        }
+        return true;
     }
     private void handleGenerateReportAction()
     {

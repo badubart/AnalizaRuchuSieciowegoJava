@@ -1,10 +1,12 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L7DHCP;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
-import java.util.ArrayList;
-
+/**
+ * Matcher protokołu DHCP (UDP, porty 67/68).
+ * Rozpoznaje magic cookie 0x63825363 na offsecie 236 oraz pole op = 1 (request) lub 2 (reply).
+ */
 public class DhcpMatcher extends ProtocolMatcher {
     public DhcpMatcher() { super("DHCP", L4Protocol.UDP, 67, 68); }   // UDP
     @Override public boolean identify(byte[] p, int s, int d, boolean tcp) {

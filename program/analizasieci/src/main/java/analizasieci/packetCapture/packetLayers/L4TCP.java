@@ -5,6 +5,10 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa 4 – TCP. Udostępnia porty, numery sekwencyjny i potwierdzenia (SEQ/ACK),
+ * rozmiar okna oraz sumę kontrolną.
+ */
 public class L4TCP implements ProtocolLayer{
     private final TcpPacket packet;
 

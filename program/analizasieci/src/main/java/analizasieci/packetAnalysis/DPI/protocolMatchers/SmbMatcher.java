@@ -1,8 +1,13 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L7SMB;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
+/**
+ * Matcher protokołu SMB/CIFS (TCP, porty 445/139).
+ * Rozpoznaje sygnaturę "\\xFFSMB" (SMB1) lub "\\xFESMB" (SMB2); dla portu 139
+ * uwzględnia 4-bajtowy nagłówek sesji NetBIOS (przesunięcie offsetu).
+ */
 public class SmbMatcher  extends ProtocolMatcher{
     public SmbMatcher() { super("SMB", L4Protocol.TCP, 445, 139); }
     @Override public boolean identify(byte[] p, int s, int d, boolean tcp) {

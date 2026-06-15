@@ -9,10 +9,21 @@ import org.pcap4j.packet.Packet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Detektor ataku DDoS.
+ * Dla każdego celu śledzi jednocześnie liczbę różnych adresów źródłowych
+ * ({@link DistinctWindow}) oraz tempo pakietów ({@link SlidingWindow}); anomalię
+ * zgłasza, gdy w oknie wystąpi zarówno wiele źródeł, jak i wysokie tempo.
+ */
 public class DdosAnomaly implements AnomalyDetector {
     private final long windowMs; private final int sourceThreshold; private final int rateThreshold;
     private final Map<String, DistinctWindow<String>> sources = new HashMap<>();
     private final Map<String, SlidingWindow> rate = new HashMap<>();
+    /**
+     * @param windowMs        długość okna czasowego (ms)
+     * @param sourceThreshold próg liczby różnych źródeł
+     * @param rateThreshold   próg liczby pakietów w oknie
+     */
     public DdosAnomaly(long windowMs, int sourceThreshold, int rateThreshold) {
         this.windowMs = windowMs; this.sourceThreshold = sourceThreshold; this.rateThreshold = rateThreshold;
     }

@@ -10,6 +10,12 @@ import org.pcap4j.packet.TcpPacket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Detektor retransmisji TCP.
+ * Dla każdej sesji TCP ({@link TcpTransmission}) pamięta najwyższy dotychczasowy
+ * numer sekwencyjny końca danych; pakiet z numerem końcowym nieprzekraczającym tej
+ * wartości traktuje jako retransmisję. Sesja jest zapominana po FIN/RST.
+ */
 public class RetransmissionAnomaly implements AnomalyDetector {
 
     final private Map<TcpTransmission, Long> currentSessions = new HashMap<>();

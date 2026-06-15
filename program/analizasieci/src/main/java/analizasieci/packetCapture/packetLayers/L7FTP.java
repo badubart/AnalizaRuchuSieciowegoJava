@@ -3,6 +3,9 @@ package analizasieci.packetCapture.packetLayers;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Warstwa FTP (kanał sterujący). Prezentuje pierwszą linię komendy lub odpowiedzi FTP.
+ */
 public class L7FTP implements ProtocolLayer {
     private final String ftpText;
 

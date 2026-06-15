@@ -1,12 +1,16 @@
-package analizasieci.packetCapture.packetLayers.protocolMatchers;
+package analizasieci.packetAnalysis.DPI.protocolMatchers;
 
 import analizasieci.packetCapture.packetLayers.L7TELNET;
 import analizasieci.packetCapture.packetLayers.ProtocolLayer;
 
+/**
+ * Matcher protokołu Telnet (TCP, port 23).
+ * Rozpoznaje negocjację opcji: bajt IAC (0xFF) + komenda WILL/WONT/DO/DONT (0xFB..0xFE).
+ */
 public class TelnetMatcher  extends ProtocolMatcher{
     public TelnetMatcher() { super("Telnet", L4Protocol.TCP, 23); }
     @Override public boolean identify(byte[] p, int s, int d, boolean tcp) {
-        // negocjacja opcji: IAC (0xFF) + WILL/WONT/DO/DONT (0xFB..0xFE)
+        //  IAC (0xFF) + WILL/WONT/DO/DONT (0xFB..0xFE)
         return p.length >= 3 && (p[0] & 0xFF) == 0xFF
                 && (p[1] & 0xFF) >= 0xFB && (p[1] & 0xFF) <= 0xFE;
     }
